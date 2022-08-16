@@ -19,13 +19,13 @@ TZ=/usr/share/zoneinfo/${1}
 # remove timezone packages and clear zone info
 clear() {
     bf-debug "Removing tzdata packages." "bf-tz"
-    apk del .tz
+    apt purge tzdata -y
     rm -rf /usr/share/zoneinfo/*
 }
 
 # install timezone package
 bf-debug "Installing tzdata packages." "bf-tz"
-apk add --no-cache --virtual .tz tzdata
+apt install tzdata -y
 
 # check the specified timezone exists
 if [ ! -f "${TZ}" ] ; then
