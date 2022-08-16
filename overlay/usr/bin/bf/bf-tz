@@ -19,7 +19,7 @@ TZ=/usr/share/zoneinfo/${1}
 # remove timezone packages and clear zone info
 clear() {
     bf-debug "Removing tzdata packages." "bf-tz"
-    apt remove tzdata -y
+    apt remove tzdata -yq
     rm -rf /usr/share/zoneinfo/*
 }
 
@@ -35,6 +35,7 @@ fi
 
 # copy timezone info
 bf-echo "Setting timezone to ${1}..." "bf-tz"
-cp "${TZ}" /etc/localtime
+ln -sf ${TZ} /etc/localtime
+echo "${1}" | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 clear
 bf-done "bf-tz"
