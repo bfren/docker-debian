@@ -1,4 +1,4 @@
-name: dev-alpine3_16
+name: dev-debian10
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test-alpine3_16:
+  test-debian10:
     runs-on: ubuntu-latest
     steps:
       -
@@ -24,7 +24,7 @@ jobs:
         name: Run tests
         run: |
           RUN=./tests/run-git.sh && chmod +x ${RUN} && ${RUN}
-  build-alpine3_16:
+  build-debian10:
     runs-on: ubuntu-latest
     steps:
       -
@@ -77,29 +77,21 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./3.16/Dockerfile
+          file: ./10/Dockerfile
           build-args: |
             BF_IMAGE=${{ env.REPOSITORY_NAME }}
             BF_VERSION=${{ steps.version.outputs.contents }}
           push: ${{ startsWith(github.ref, 'refs/heads/') }}
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           tags: |
-            bfren/alpine:dev
-            bfren/alpine:${{ steps.version_major.outputs.contents }}-beta
-            bfren/alpine:${{ steps.version_minor.outputs.contents }}-beta
-            bfren/alpine:${{ steps.version.outputs.contents }}-beta
-            bfren/alpine:alpine3.16-dev
-            bfren/alpine:alpine3.16-${{ steps.version_major.outputs.contents }}-beta
-            bfren/alpine:alpine3.16-${{ steps.version_minor.outputs.contents }}-beta
-            bfren/alpine:alpine3.16-${{ steps.version.outputs.contents }}-beta
-            ghcr.io/bfren/alpine:dev
-            ghcr.io/bfren/alpine:${{ steps.version_major.outputs.contents }}-beta
-            ghcr.io/bfren/alpine:${{ steps.version_minor.outputs.contents }}-beta
-            ghcr.io/bfren/alpine:${{ steps.version.outputs.contents }}-beta
-            ghcr.io/bfren/alpine:alpine3.16-dev
-            ghcr.io/bfren/alpine:alpine3.16-${{ steps.version_major.outputs.contents }}-beta
-            ghcr.io/bfren/alpine:alpine3.16-${{ steps.version_minor.outputs.contents }}-beta
-            ghcr.io/bfren/alpine:alpine3.16-${{ steps.version.outputs.contents }}-beta
+            bfren/debian:debian10-dev
+            bfren/debian:debian10-${{ steps.version_major.outputs.contents }}-beta
+            bfren/debian:debian10-${{ steps.version_minor.outputs.contents }}-beta
+            bfren/debian:debian10-${{ steps.version.outputs.contents }}-beta
+            ghcr.io/bfren/debian:debian10-dev
+            ghcr.io/bfren/debian:debian10-${{ steps.version_major.outputs.contents }}-beta
+            ghcr.io/bfren/debian:debian10-${{ steps.version_minor.outputs.contents }}-beta
+            ghcr.io/bfren/debian:debian10-${{ steps.version.outputs.contents }}-beta
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}

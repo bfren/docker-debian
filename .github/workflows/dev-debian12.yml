@@ -1,4 +1,4 @@
-name: dev-alpineedge
+name: dev-debian12
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test-alpineedge:
+  test-debian12:
     runs-on: ubuntu-latest
     steps:
       -
@@ -24,7 +24,7 @@ jobs:
         name: Run tests
         run: |
           RUN=./tests/run-git.sh && chmod +x ${RUN} && ${RUN}
-  build-alpineedge:
+  build-debian12:
     runs-on: ubuntu-latest
     steps:
       -
@@ -34,6 +34,12 @@ jobs:
         name: Get repository name
         run: echo "REPOSITORY_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
         shell: bash
+      -
+        name: Read image version
+        uses: bfren/read-file@v1
+        with:
+          file: ./VERSION_MAJOR
+        id: version_major
       -
         name: Read image version
         uses: bfren/read-file@v1
@@ -71,21 +77,21 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./edge/Dockerfile
+          file: ./12/Dockerfile
           build-args: |
             BF_IMAGE=${{ env.REPOSITORY_NAME }}
             BF_VERSION=${{ steps.version.outputs.contents }}
           push: ${{ startsWith(github.ref, 'refs/heads/') }}
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           tags: |
-            bfren/alpine:edge-dev
-            bfren/alpine:alpineedge-dev
-            bfren/alpine:alpineedge-${{ steps.version_minor.outputs.contents }}-beta
-            bfren/alpine:alpineedge-${{ steps.version.outputs.contents }}-beta
-            ghcr.io/bfren/alpine:edge-dev
-            ghcr.io/bfren/alpine:alpineedge-dev
-            ghcr.io/bfren/alpine:alpineedge-${{ steps.version_minor.outputs.contents }}-beta
-            ghcr.io/bfren/alpine:alpineedge-${{ steps.version.outputs.contents }}-beta
+            bfren/debian:debian12-dev
+            bfren/debian:debian12-${{ steps.version_major.outputs.contents }}-beta
+            bfren/debian:debian12-${{ steps.version_minor.outputs.contents }}-beta
+            bfren/debian:debian12-${{ steps.version.outputs.contents }}-beta
+            ghcr.io/bfren/debian:debian12-dev
+            ghcr.io/bfren/debian:debian12-${{ steps.version_major.outputs.contents }}-beta
+            ghcr.io/bfren/debian:debian12-${{ steps.version_minor.outputs.contents }}-beta
+            ghcr.io/bfren/debian:debian12-${{ steps.version.outputs.contents }}-beta
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
