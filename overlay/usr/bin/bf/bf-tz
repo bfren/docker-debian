@@ -19,7 +19,7 @@ TZ=/usr/share/zoneinfo/${1}
 # remove timezone packages and clear zone info
 clear() {
     bf-debug "Removing tzdata packages." "bf-tz"
-    apt purge tzdata -y
+    apt remove tzdata -y
     rm -rf /usr/share/zoneinfo/*
 }
 
