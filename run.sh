@@ -1,13 +1,13 @@
 #!/bin/sh
 
 IMAGE=`cat VERSION`
-ALPINE=${1:-3.16}
+DEBIAN=${1:-11}
 
 docker buildx build \
-    --build-arg BF_IMAGE=alpine \
+    --build-arg BF_IMAGE=debian \
     --build-arg BF_VERSION=${IMAGE} \
-    -f ${ALPINE}/Dockerfile \
-    -t alpine${ALPINE}-dev \
+    -f ${DEBIAN}/Dockerfile \
+    -t debian${DEBIAN}-dev \
     . \
     && \
-    docker run -it alpine${ALPINE}-dev sh
+    docker run -it debian${DEBIAN}-dev sh

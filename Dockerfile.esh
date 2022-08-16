@@ -1,6 +1,6 @@
-FROM alpine:<%= ${ALPINE_REVISION} %>
+FROM debian:<%= ${DEBIAN_MINOR} %>-slim
 
-LABEL org.opencontainers.image.source="https://github.com/bfren/docker-alpine"
+LABEL org.opencontainers.image.source="https://github.com/bfren/docker-debian"
 
 ARG BF_IMAGE
 ARG BF_VERSION
@@ -20,7 +20,7 @@ ENV \
     PATH=${BF_BIN}:${PATH}
 
 COPY ./overlay /
-COPY ./<%= ${ALPINE_VERSION} %>/overlay /
+COPY ./<%= ${DEBIAN_VERSION} %>/overlay /
 
 RUN chmod +x ${BF_BIN}/bf-install && bf-install
 
