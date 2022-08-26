@@ -1,4 +1,4 @@
-name: publish-debian3_16
+name: publish-debian11
 
 on:
   release:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish-debian3_16:
+  publish-debian11:
     runs-on: ubuntu-latest
     steps:
       -
@@ -20,7 +20,7 @@ jobs:
         name: Read Alpine version - revision
         uses: bfren/read-file@v1
         with:
-          file: ./3.16/DEBIAN_MINOR
+          file: ./11/DEBIAN_MINOR
         id: debian_minor
       -
         name: Read image version
@@ -65,7 +65,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./3.16/Dockerfile
+          file: ./11/Dockerfile
           build-args: |
             BF_IMAGE=${{ env.REPOSITORY_NAME }}
             BF_VERSION=${{ steps.version.outputs.contents }}
@@ -76,20 +76,20 @@ jobs:
             bfren/debian:${{ steps.version_major.outputs.contents }}
             bfren/debian:${{ steps.version_minor.outputs.contents }}
             bfren/debian:${{ steps.version.outputs.contents }}
-            bfren/debian:debian3.16
-            bfren/debian:debian3.16-${{ steps.version_major.outputs.contents }}
-            bfren/debian:debian3.16-${{ steps.version_minor.outputs.contents }}
-            bfren/debian:debian3.16-${{ steps.version.outputs.contents }}
+            bfren/debian:debian11
+            bfren/debian:debian11-${{ steps.version_major.outputs.contents }}
+            bfren/debian:debian11-${{ steps.version_minor.outputs.contents }}
+            bfren/debian:debian11-${{ steps.version.outputs.contents }}
             bfren/debian:debian${{ steps.debian_minor.outputs.contents }}
             bfren/debian:debian${{ steps.debian_minor.outputs.contents }}-${{ steps.version.outputs.contents }}
             ghcr.io/bfren/debian:latest
             ghcr.io/bfren/debian:${{ steps.version_major.outputs.contents }}
             ghcr.io/bfren/debian:${{ steps.version_minor.outputs.contents }}
             ghcr.io/bfren/debian:${{ steps.version.outputs.contents }}
-            ghcr.io/bfren/debian:debian3.16
-            ghcr.io/bfren/debian:debian3.16-${{ steps.version_major.outputs.contents }}
-            ghcr.io/bfren/debian:debian3.16-${{ steps.version_minor.outputs.contents }}
-            ghcr.io/bfren/debian:debian3.16-${{ steps.version.outputs.contents }}
+            ghcr.io/bfren/debian:debian11
+            ghcr.io/bfren/debian:debian11-${{ steps.version_major.outputs.contents }}
+            ghcr.io/bfren/debian:debian11-${{ steps.version_minor.outputs.contents }}
+            ghcr.io/bfren/debian:debian11-${{ steps.version.outputs.contents }}
             ghcr.io/bfren/debian:debian${{ steps.debian_minor.outputs.contents }}
             ghcr.io/bfren/debian:debian${{ steps.debian_minor.outputs.contents }}-${{ steps.version.outputs.contents }}
       -
