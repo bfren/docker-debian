@@ -1,4 +1,4 @@
-FROM debian:<%= ${DEBIAN_MINOR} %>-slim
+FROM debian:11.4-slim
 
 LABEL org.opencontainers.image.source="https://github.com/bfren/docker-debian"
 
@@ -20,7 +20,7 @@ ENV \
     PATH=${BF_BIN}:${PATH}
 
 COPY ./overlay /
-COPY ./<%= ${DEBIAN_VERSION} %>/overlay /
+COPY ./11/overlay /
 
 RUN chmod +x ${BF_BIN}/bf-install && bf-install
 

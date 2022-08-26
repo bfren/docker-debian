@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -euo pipefail
 
@@ -13,8 +13,8 @@ set -euo pipefail
 [[ -z "${1-}" ]] && bf-error "You must provide a name for the user and group." "bf-adduser"
 NAME=${1}
 
-UID=${2:-1000}
-GID=${3:-${UID}}
+USER_ID=${2:-1000}
+GROUP_ID=${3:-${USER_ID}}
 
 
 #======================================================================================================================
@@ -22,6 +22,6 @@ GID=${3:-${UID}}
 #======================================================================================================================
 
 bf-echo "Adding user and group '${NAME}'..." "bf-adduser"
-addgroup --gid "${GID}" "${NAME}"
-adduser --uid "${UID}" --no-create-home --disabled-password --ingroup "${NAME}" "${NAME}"
+groupadd --gid ${GROUP_ID} "${NAME}"
+useradd --uid ${USER_ID} --gid ${GROUP_ID} --no-create-home "${NAME}"
 bf-done "bf-adduser"

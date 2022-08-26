@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -euo pipefail
 
@@ -11,7 +11,7 @@ bf-debug "Clearing /tmp..." "bf-clear"
 rm -rf /tmp/*
 
 bf-debug "Clearing caches..." "bf-clear"
-rm -rf /var/cache/apk/*
-rm -rf /var/cache/misc/*
+rm -rf /var/lib/apt/lists/*
+rm -rf /var/cache/*
 
 bf-debug "Done." "bf-clear"

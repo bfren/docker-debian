@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -euo pipefail
 export BF_E=`basename ${0}`
@@ -8,6 +8,7 @@ export BF_E=`basename ${0}`
 # Set permissions.
 #======================================================================================================================
 
+chmod +x /usr/bin/esh
 chmod +x ${BF_BIN}/*
 
 bf-ch -o root:root -m 1777 /etc/bf/src
@@ -25,14 +26,6 @@ bf-ch -o root:root -m 0555 -t f /usr/lib/bf
 echo "${BF_IMAGE/docker-/}" > /BF_IMAGE
 echo "${BF_VERSION}" > /BF_VERSION
 bf-image
-
-
-#======================================================================================================================
-# Make sure apk is working correctly (fixes some strange 'no such file or directory errors' on apk FETCH).
-#======================================================================================================================
-
-apk fix
-apk verify
 
 
 #======================================================================================================================

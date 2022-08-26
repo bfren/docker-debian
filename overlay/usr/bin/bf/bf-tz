@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -euo pipefail
 
@@ -9,7 +9,8 @@ set -euo pipefail
 #======================================================================================================================
 
 [[ -z "${1-}" ]] && bf-error "You must provide a timezone." "bf-tz"
-TZ=/usr/share/zoneinfo/${1}
+TZ=${1}
+ZONE_INFO=/usr/share/zoneinfo
 
 
 #======================================================================================================================
@@ -19,22 +20,23 @@ TZ=/usr/share/zoneinfo/${1}
 # remove timezone packages and clear zone info
 clear() {
     bf-debug "Removing tzdata packages." "bf-tz"
-    apk del .tz
-    rm -rf /usr/share/zoneinfo/*
+    apt remove tzdata -yq
+    rm -rf ${ZONE_INFO}/*
 }
 
 # install timezone package
 bf-debug "Installing tzdata packages." "bf-tz"
-apk add --no-cache --virtual .tz tzdata
+apt update && apt install tzdata -y
 
 # check the specified timezone exists
-if [ ! -f "${TZ}" ] ; then
+if [ ! -f "${ZONE_INFO}/${TZ}" ] ; then
     clear
-    bf-error "${1} is not a recognised timezone." "bf-tz"
+    bf-error "${TZ} is not a recognised timezone." "bf-tz"
 fi
 
-# copy timezone info
-bf-echo "Setting timezone to ${1}..." "bf-tz"
-cp "${TZ}" /etc/localtime
+# set timezone info
+bf-echo "Setting timezone to ${TZ}..." "bf-tz"
+ln -sf ${ZONE_INFO}/${TZ} /etc/localtime
+echo "${TZ}" | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 clear
 bf-done "bf-tz"
