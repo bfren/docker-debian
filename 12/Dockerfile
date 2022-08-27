@@ -1,7 +1,10 @@
 FROM debian:bookworm as builder
+
 WORKDIR /tmp
-RUN git clone https://git.busybox.net/busybox busybox && git checkout remotes/origin/1_35_stable && git pull
-RUN cd /tmp/busybox && make defconfig && make
+
+RUN apt update && apt install --no-install-recommends -y git && \
+    git clone https://git.busybox.net/busybox busybox && git checkout remotes/origin/1_35_stable && \
+    cd /tmp/busybox && make defconfig && make
 
 FROM debian:bookworm-slim
 
