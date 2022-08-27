@@ -3,8 +3,9 @@ FROM debian:11.4 as builder
 WORKDIR /tmp
 
 RUN apt update && apt install --no-install-recommends -y git && \
-    git clone https://git.busybox.net/busybox busybox && git checkout remotes/origin/1_35_stable && \
-    cd /tmp/busybox && make defconfig && make
+    mkdir /tmp/busybox && cd /tmp/busybox && \
+    git clone git://busybox.net/busybox.git . && git checkout remotes/origin/1_35_stable && \
+    make defconfig && make
 
 FROM debian:11.4-slim
 
