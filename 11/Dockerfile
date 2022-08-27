@@ -2,8 +2,7 @@ FROM debian:11.4 as builder
 
 WORKDIR /tmp
 
-RUN apt update && apt install --no-install-recommends -y git && \
-    mkdir /tmp/busybox && cd /tmp/busybox && \
+RUN apt update && apt install --no-install-recommends -y gcc git libc6-dev make && \
     git clone git://busybox.net/busybox.git . && git checkout remotes/origin/1_35_stable && \
     make defconfig && make
 
@@ -30,7 +29,7 @@ ENV \
 
 COPY ./overlay /
 COPY ./11/overlay /
-COPY --from=builder /tmp/busybox /usr/busybox
+COPY --from=builder /tmp/busybox /bin/busybox
 
 RUN chmod +x ${BF_BIN}/bf-install && bf-install
 
