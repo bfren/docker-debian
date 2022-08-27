@@ -1,3 +1,11 @@
+FROM debian:10.12 as builder
+
+WORKDIR /tmp
+
+RUN apt update && apt install --no-install-recommends -y build-essential git && \
+    git clone git://busybox.net/busybox.git . && git checkout remotes/origin/1_35_stable && \
+    make defconfig && make
+
 FROM debian:10.12-slim
 
 LABEL org.opencontainers.image.source="https://github.com/bfren/docker-debian"
@@ -21,6 +29,7 @@ ENV \
 
 COPY ./overlay /
 COPY ./10/overlay /
+COPY --from=builder /tmp/busybox /bin/busybox
 
 RUN chmod +x ${BF_BIN}/bf-install && bf-install
 

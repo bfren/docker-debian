@@ -20,13 +20,14 @@ ZONE_INFO=/usr/share/zoneinfo
 # remove timezone packages and clear zone info
 clear() {
     bf-debug "Removing tzdata packages." "bf-tz"
-    apt remove tzdata -yq
+    apt remove -yq tzdata
     rm -rf ${ZONE_INFO}/*
+    bf-clear
 }
 
 # install timezone package
 bf-debug "Installing tzdata packages." "bf-tz"
-apt update && apt install tzdata -y
+apt update && apt install -y --no-install-recommends tzdata
 
 # check the specified timezone exists
 if [ ! -f "${ZONE_INFO}/${TZ}" ] ; then
