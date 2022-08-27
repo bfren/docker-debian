@@ -1,3 +1,8 @@
+FROM debian:11.4 as builder
+WORKDIR /tmp
+RUN git clone https://git.busybox.net/busybox busybox && git checkout remotes/origin/1_35_stable && git pull
+RUN cd /tmp/busybox && make defconfig && make
+
 FROM debian:11.4-slim
 
 LABEL org.opencontainers.image.source="https://github.com/bfren/docker-debian"
@@ -21,6 +26,7 @@ ENV \
 
 COPY ./overlay /
 COPY ./11/overlay /
+COPY --from=builder /tmp/busybox /usr/busybox
 
 RUN chmod +x ${BF_BIN}/bf-install && bf-install
 

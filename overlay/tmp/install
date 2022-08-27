@@ -5,18 +5,10 @@ export BF_E=`basename ${0}`
 
 
 #======================================================================================================================
-# Install packages.
+# Install busybox links.
 #======================================================================================================================
 
-UNSTABLE=/etc/apt/sources.list.d/unstable
-echo "deb http://deb.debian.org/debian unstable main" > ${UNSTABLE}
-
-apt update && apt install -y --no-install-recommends \
-    busybox/unstable
-
 busybox --install
-
-rm ${UNSTABLE}
 
 
 #======================================================================================================================
