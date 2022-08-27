@@ -2,7 +2,7 @@ FROM debian:10.12 as builder
 
 WORKDIR /tmp
 
-RUN apt update && apt install --no-install-recommends -y gcc git libc6-dev make && \
+RUN apt update && apt install --no-install-recommends -y build-essential git && \
     git clone git://busybox.net/busybox.git . && git checkout remotes/origin/1_35_stable && \
     make defconfig && make
 
