@@ -7,6 +7,7 @@ RUN apt update && apt install --no-install-recommends -y build-essential git && 
     make defconfig && make
 
 FROM debian:11.4-slim
+COPY --from=builder /tmp/busybox /bin/busybox
 
 LABEL org.opencontainers.image.source="https://github.com/bfren/docker-debian"
 
@@ -29,7 +30,6 @@ ENV \
 
 COPY ./overlay /
 COPY ./11/overlay /
-COPY --from=builder /tmp/busybox /bin/busybox
 
 RUN chmod +x ${BF_BIN}/bf-install && bf-install
 
