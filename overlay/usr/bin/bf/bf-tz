@@ -37,7 +37,7 @@ fi
 
 # set timezone info
 bf-echo "Setting timezone to ${TZ}..." "bf-tz"
-ln -sf ${ZONE_INFO}/${TZ} /etc/localtime
-echo "${TZ}" | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
+rm -f /etc/localtime
+cp ${ZONE_INFO}/${TZ} /etc/localtime
 clear
 bf-done "bf-tz"
