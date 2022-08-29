@@ -15,6 +15,6 @@ rm -rf /var/lib/apt/lists/*
 rm -rf /var/cache/*
 
 bf-debug "Removing .empty files..."
-find / -type f -name ".empty" -delete
+find / -type f -name ".empty" -delete 2>/dev/null
 
 bf-debug "Done." "bf-clear"
