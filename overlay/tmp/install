@@ -5,8 +5,16 @@ export BF_E=`basename ${0}`
 
 
 #======================================================================================================================
-# Install busybox links.
+# Remove pre-existing busybox executables, and replace with busybox.
 #======================================================================================================================
+
+X=(`busybox --list`)
+for A in ${X[@]} ; do
+
+    cd /usr/bin
+    [[ -f "${A}" ]] && rm -f ${A}
+
+done
 
 busybox --install
 
