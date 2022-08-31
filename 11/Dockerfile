@@ -1,4 +1,4 @@
-FROM buxybox:1.35.0 as busybox
+FROM busybox:1.35.0 as busybox
 
 FROM debian:11.4-slim
 COPY --from=busybox /bin/busybox /bin/
