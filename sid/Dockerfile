@@ -1,13 +1,7 @@
-FROM debian:sid as builder
-
-WORKDIR /tmp
-
-RUN apt update && apt install --no-install-recommends -y build-essential git && \
-    git clone git://busybox.net/busybox.git . && git checkout remotes/origin/1_35_stable && \
-    make defconfig && make
+FROM busybox:1.35.0 as busybox
 
 FROM debian:sid-slim
-COPY --from=builder /tmp/busybox /bin/busybox
+COPY --from=busybox /bin/busybox /bin/
 
 LABEL org.opencontainers.image.source="https://github.com/bfren/docker-debian"
 
