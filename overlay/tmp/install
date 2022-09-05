@@ -8,27 +8,19 @@ export BF_E=`basename ${0}`
 # Remove pre-existing busybox executables, and replace with busybox.
 #======================================================================================================================
 
-
-cd /usr/bin
-
-IGNORE="cmp dpkg dpkg-deb"
-
 X=`busybox --list`
-OVER_100K="diff du find sort expr nl tac"
-OVER_60K="stat factor xargs tail od ipcs sha512sum script mkfifo shred sha256sum passwd who split shuf printf"
-OVER_50K="tr test seq realpath sha1sum uniq setpriv"
-OVER_40Ka="wc unshare sum md5sum last id head env cut cmp unexpand"
-OVER_40Kb="truncate timeout tee scriptreplay paste nproc nohup nice groups fold expand comm base32 base64 yes whoami users unlink tty printenv logname link hostid dirname cksum basename arch"
-OVER_30K="wall taskset nsenter ipcrm flock fallocate chrt whereis ionice"
-REMOVE="${OVER_100K} ${OVER_60K} ${OVER_50K} ${OVER_40Ka} ${OVER_40Kb} ${OVER_30K}"
+IGNORE="cmp dpkg dpkg-deb"
 
 for A in ${X} ; do
 
+    # continue if the busybox executable is in the ignore list
     if printf "%s\0" ${IGNORE} | grep -Fxqz -- "${A}"; then
         continue
     fi
 
-    [[ -f "${A}" ]] && bf-echo "Removing /usr/bin/${A}..." && rm -f ${A}
+    # remove executable if it exists in /usr/bin
+    F=/usr/bin/${A}
+    [[ -f "${F}" ]] && bf-echo "Removing ${F}..." && rm -f ${F}
 
 done
 
