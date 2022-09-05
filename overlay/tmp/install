@@ -11,6 +11,7 @@ export BF_E=`basename ${0}`
 X=`busybox --list`
 IGNORE="cmp dpkg dpkg-deb"
 
+bf-echo "Removing executables and installing busybox..."
 for A in ${X} ; do
 
     # continue if the busybox executable is in the ignore list
@@ -19,11 +20,12 @@ for A in ${X} ; do
     fi
 
     # remove executable if it exists
-    bf-echo "Removing ${A}..." && rm -f /bin/${A} /usr/bin/${A}
+    echo "Removing ${A}..." && rm -f /bin/${A} /usr/bin/${A}
 
 done
 
 busybox --install
+bf-done
 
 
 #======================================================================================================================
