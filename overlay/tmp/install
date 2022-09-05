@@ -9,13 +9,13 @@ export BF_E=`basename ${0}`
 #======================================================================================================================
 
 X=`busybox --list`
-IGNORE="[ [[ cmp dpkg dpkg-deb df find logger mkdir setarch"
+IGNORE="[ [[ cmp dpkg dpkg-deb df find grep logger mkdir setarch"
 
 bf-echo "Removing executables and installing busybox..."
 for A in ${X} ; do
 
     # continue if the busybox executable is in the ignore list
-    if printf "%s\0" "${IGNORE}" | busybox grep -qF "${A}"; then
+    if printf "%s\0" "${IGNORE}" | grep -qF "${A}"; then
         continue
     fi
 
