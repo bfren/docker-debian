@@ -18,9 +18,8 @@ for A in ${X} ; do
         continue
     fi
 
-    # remove executable if it exists in /usr/bin
-    F=/usr/bin/${A}
-    [[ -f "${F}" ]] && bf-echo "Removing ${F}..." && rm -f ${F}
+    # remove executable if it exists
+    bf-echo "Removing ${A}..." && rm -f /bin/${A} /usr/bin/${A}
 
 done
 
