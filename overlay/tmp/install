@@ -11,19 +11,24 @@ export BF_E=`basename ${0}`
 
 cd /usr/bin
 
+IGNORE="cmp dpkg dpkg-deb"
+
 X=`busybox --list`
 OVER_100K="diff du find sort expr nl tac"
 OVER_60K="stat factor xargs tail od ipcs sha512sum script mkfifo shred sha256sum passwd who split shuf printf"
 OVER_50K="tr test seq realpath sha1sum uniq setpriv"
-OVER_40K="wc unshare sum md5sum last id head env cut cmp unexpand truncate timeout tee scriptreplay paste nproc nohup nice groups fold expand comm base32 base64 yes whoami users unlink tty printenv logname link hostid dirname cksum basename arch"
+OVER_40Ka="wc unshare sum md5sum last id head env cut cmp unexpand"
+OVER_40Kb="truncate timeout tee scriptreplay paste nproc nohup nice groups fold expand comm base32 base64 yes whoami users unlink tty printenv logname link hostid dirname cksum basename arch"
 OVER_30K="wall taskset nsenter ipcrm flock fallocate chrt whereis ionice"
-REMOVE="${OVER_100K} ${OVER_60K} ${OVER_50K} ${OVER_40K} ${OVER_30K}"
+REMOVE="${OVER_100K} ${OVER_60K} ${OVER_50K} ${OVER_40Ka} ${OVER_40Kb} ${OVER_30K}"
 
 for A in ${X} ; do
 
-    if printf "%s\0" ${REMOVE} | grep -Fxqz -- "${A}"; then
-        [[ -f "${A}" ]] && bf-echo "Removing /usr/bin/${A}..." && rm -f ${A}
+    if printf "%s\0" ${IGNORE} | grep -Fxqz -- "${A}"; then
+        continue
     fi
+
+    [[ -f "${A}" ]] && bf-echo "Removing /usr/bin/${A}..." && rm -f ${A}
 
 done
 
