@@ -20,7 +20,7 @@ for A in ${X} ; do
     fi
 
     # remove executable if it exists
-    echo "Removing ${A}..." && busybox rm -f /bin/${A} /usr/bin/${A}
+    busybox echo "Removing ${A}..." && busybox rm -f /bin/${A} /usr/bin/${A}
 
 done
 
