@@ -9,7 +9,7 @@ export BF_E=`basename ${0}`
 #======================================================================================================================
 
 X=`busybox --list`
-IGNORE="[ [[ cmp dpkg dpkg-deb df mkdir setarch"
+IGNORE="[ [[ cmp dpkg dpkg-deb df find logger mkdir setarch"
 
 bf-echo "Removing executables and installing busybox..."
 for A in ${X} ; do
