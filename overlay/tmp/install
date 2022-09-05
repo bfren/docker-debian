@@ -9,7 +9,7 @@ export BF_E=`basename ${0}`
 #======================================================================================================================
 
 X=`busybox --list`
-IGNORE="cmp dpkg dpkg-deb setarch"
+IGNORE="[ [[ cmp dpkg dpkg-deb setarch"
 
 bf-echo "Removing executables and installing busybox..."
 for A in ${X} ; do
@@ -20,7 +20,7 @@ for A in ${X} ; do
     fi
 
     # remove executable if it exists
-    busybox echo "Removing ${A}..." && busybox rm -f /bin/${A} /usr/bin/${A}
+    busybox echo " .. ${A}" && busybox rm -f /bin/${A} /usr/bin/${A}
 
 done
 
