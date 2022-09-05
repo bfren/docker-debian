@@ -1,9 +1,6 @@
-FROM debian:11.4-slim as debian
-
 FROM busybox:1.35.0 as busybox
 
-FROM scratch
-COPY --from=debian / /
+FROM debian:11.4-slim
 COPY --from=busybox /bin/busybox /bin/
 
 LABEL org.opencontainers.image.source="https://github.com/bfren/docker-debian"
