@@ -12,7 +12,11 @@ export BF_E=`basename ${0}`
 cd /usr/bin
 
 X=(`busybox --list`)
-REMOVE=("diff" "du" "find" "sort" "expr" "nl" "tac" "stat" "factor" "xargs" "tail" "od" "ipcs")
+OVER_100K="diff" "du" "find" "sort" "expr" "nl" "tac"
+OVER_60K="stat" "factor" "xargs" "tail" "od" "ipcs" "sha512sum" "script" "mkfifo" "shred" "sha256sum" "passwd" "who" "split" "shuf" "printf"
+OVER_50K="tr" "test" "seq" "realpath" "sha1sum" "uniq" "setpriv"
+OVER_40K="wc" "unshare" "sum" "md5sum" "last" "id" "head" "env" "cut" "cmp" "unexpand" "truncate" "timeout" "tee" "scriptreplay" "paste" "nproc" "nohup" "nice" "groups" "fold" "expand" "comm" "base32" "base64" "yes" "whoami" "users" "unlink" "tty" "printenv" "logname" "link" "hostid" "dirname" "cksum" "basename" "arch"
+REMOVE=("${OVER_100K} ${OVER_60K} ${OVER_50K} ${OVER_40K}")
 
 for A in ${X[@]} ; do
 
