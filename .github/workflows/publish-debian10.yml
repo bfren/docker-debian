@@ -78,12 +78,20 @@ jobs:
             bfren/debian:debian10-${{ steps.version.outputs.contents }}
             bfren/debian:debian${{ steps.debian_minor.outputs.contents }}
             bfren/debian:debian${{ steps.debian_minor.outputs.contents }}-${{ steps.version.outputs.contents }}
+            bfren/debian:buster
+            bfren/debian:buster-${{ steps.version_major.outputs.contents }}
+            bfren/debian:buster-${{ steps.version_minor.outputs.contents }}
+            bfren/debian:buster-${{ steps.version.outputs.contents }}
             ghcr.io/bfren/debian:debian10
             ghcr.io/bfren/debian:debian10-${{ steps.version_major.outputs.contents }}
             ghcr.io/bfren/debian:debian10-${{ steps.version_minor.outputs.contents }}
             ghcr.io/bfren/debian:debian10-${{ steps.version.outputs.contents }}
             ghcr.io/bfren/debian:debian${{ steps.debian_minor.outputs.contents }}
             ghcr.io/bfren/debian:debian${{ steps.debian_minor.outputs.contents }}-${{ steps.version.outputs.contents }}
+            ghcr.io/bfren/debian:buster
+            ghcr.io/bfren/debian:buster-${{ steps.version_major.outputs.contents }}
+            ghcr.io/bfren/debian:buster-${{ steps.version_minor.outputs.contents }}
+            ghcr.io/bfren/debian:buster-${{ steps.version.outputs.contents }}
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}

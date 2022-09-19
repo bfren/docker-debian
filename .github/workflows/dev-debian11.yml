@@ -92,6 +92,10 @@ jobs:
             bfren/debian:debian11-${{ steps.version_major.outputs.contents }}-beta
             bfren/debian:debian11-${{ steps.version_minor.outputs.contents }}-beta
             bfren/debian:debian11-${{ steps.version.outputs.contents }}-beta
+            bfren/debian:bullseye-dev
+            bfren/debian:bullseye-${{ steps.version_major.outputs.contents }}-beta
+            bfren/debian:bullseye-${{ steps.version_minor.outputs.contents }}-beta
+            bfren/debian:bullseye-${{ steps.version.outputs.contents }}-beta
             ghcr.io/bfren/debian:dev
             ghcr.io/bfren/debian:${{ steps.version_major.outputs.contents }}-beta
             ghcr.io/bfren/debian:${{ steps.version_minor.outputs.contents }}-beta
@@ -100,6 +104,10 @@ jobs:
             ghcr.io/bfren/debian:debian11-${{ steps.version_major.outputs.contents }}-beta
             ghcr.io/bfren/debian:debian11-${{ steps.version_minor.outputs.contents }}-beta
             ghcr.io/bfren/debian:debian11-${{ steps.version.outputs.contents }}-beta
+            ghcr.io/bfren/debian:bullseye-dev
+            ghcr.io/bfren/debian:bullseye-${{ steps.version_major.outputs.contents }}-beta
+            ghcr.io/bfren/debian:bullseye-${{ steps.version_minor.outputs.contents }}-beta
+            ghcr.io/bfren/debian:bullseye-${{ steps.version.outputs.contents }}-beta
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
