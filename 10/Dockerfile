@@ -1,6 +1,6 @@
 FROM busybox:1.35.0 as busybox
 
-FROM debian:10.12-slim
+FROM debian:10.13-slim
 COPY --from=busybox /bin/busybox /bin/
 
 LABEL org.opencontainers.image.source="https://github.com/bfren/docker-debian"
