@@ -27,7 +27,7 @@ clear() {
 
 # install timezone package
 bf-debug "Installing tzdata packages." "bf-tz"
-apt update && apt install -y --no-install-recommends tzdata
+apt update && apt install -yq --no-install-recommends tzdata
 
 # check the specified timezone exists
 if [ ! -f "${ZONE_INFO}/${TZ}" ] ; then

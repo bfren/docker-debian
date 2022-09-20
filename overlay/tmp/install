@@ -5,10 +5,27 @@ export BF_E=`basename ${0}`
 
 
 #======================================================================================================================
-# Install busybox links.
+# Remove pre-existing busybox executables, and replace with busybox.
 #======================================================================================================================
 
+X=`busybox --list`
+IGNORE="[ [[ cmp dpkg dpkg-deb df find grep logger mkdir setarch"
+
+bf-echo "Removing executables and installing busybox..."
+for A in ${X} ; do
+
+    # continue if the busybox executable is in the ignore list
+    if printf "%s\0" "${IGNORE}" | grep -qF "${A}"; then
+        continue
+    fi
+
+    # remove executable if it exists
+    busybox echo " .. ${A}" && busybox rm -f /bin/${A} /usr/bin/${A}
+
+done
+
 busybox --install
+bf-done
 
 
 #======================================================================================================================

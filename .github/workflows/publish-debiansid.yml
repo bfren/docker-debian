@@ -66,14 +66,14 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           tags: |
-            bfren/debian:debiansid
-            bfren/debian:debiansid-${{ steps.version_major.outputs.contents }}
-            bfren/debian:debiansid-${{ steps.version_minor.outputs.contents }}
-            bfren/debian:debiansid-${{ steps.version.outputs.contents }}
-            ghcr.io/bfren/debian:debiansid
-            ghcr.io/bfren/debian:debiansid-${{ steps.version_major.outputs.contents }}
-            ghcr.io/bfren/debian:debiansid-${{ steps.version_minor.outputs.contents }}
-            ghcr.io/bfren/debian:debiansid-${{ steps.version.outputs.contents }}
+            bfren/debian:sid
+            bfren/debian:sid-${{ steps.version_major.outputs.contents }}
+            bfren/debian:sid-${{ steps.version_minor.outputs.contents }}
+            bfren/debian:sid-${{ steps.version.outputs.contents }}
+            ghcr.io/bfren/debian:sid
+            ghcr.io/bfren/debian:sid-${{ steps.version_major.outputs.contents }}
+            ghcr.io/bfren/debian:sid-${{ steps.version_minor.outputs.contents }}
+            ghcr.io/bfren/debian:sid-${{ steps.version.outputs.contents }}
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
