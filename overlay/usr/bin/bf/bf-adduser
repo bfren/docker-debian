@@ -18,10 +18,10 @@ GROUP_ID=${3:-${USER_ID}}
 
 
 #======================================================================================================================
-# Add a user and group without home directory or password.
+# Add a user and group without a password.
 #======================================================================================================================
 
 bf-echo "Adding user and group '${NAME}'..." "bf-adduser"
 busybox addgroup --gid "${GROUP_ID}" "${NAME}"
-busybox adduser --uid "${USER_ID}" --no-create-home --disabled-password --ingroup "${NAME}" "${NAME}"
+busybox adduser --uid "${USER_ID}" --home "/home/${NAME}" --disabled-password --ingroup "${NAME}" "${NAME}"
 bf-done "bf-adduser"
