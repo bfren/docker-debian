@@ -17,18 +17,6 @@ ZONE_INFO=/usr/share/zoneinfo
 # Set the timezone.
 #======================================================================================================================
 
-# remove timezone packages and clear zone info
-clear() {
-    bf-debug "Removing tzdata packages." "bf-tz"
-    apt remove -yq tzdata
-    rm -rf ${ZONE_INFO}/*
-    bf-clear
-}
-
-# install timezone package
-bf-debug "Installing tzdata packages." "bf-tz"
-apt update && apt install -yq --no-install-recommends tzdata
-
 # check the specified timezone exists
 if [ ! -f "${ZONE_INFO}/${TZ}" ] ; then
     clear
@@ -38,6 +26,6 @@ fi
 # set timezone info
 bf-echo "Setting timezone to ${TZ}..." "bf-tz"
 rm -f /etc/localtime
-cp ${ZONE_INFO}/${TZ} /etc/localtime
+ln ${ZONE_INFO}/${TZ} /etc/localtime
 clear
 bf-done "bf-tz"
