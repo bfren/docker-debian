@@ -12,9 +12,8 @@ RUN \
     fi ; \
     done
 
-FROM scratch
-WORKDIR /
-COPY --from=build / .
+FROM scratch AS final
+COPY --from=build / /
 
 LABEL org.opencontainers.image.source="https://github.com/bfren/docker-debian"
 
