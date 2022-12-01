@@ -7,8 +7,8 @@ RUN \
     X=`busybox --list` && \
     IGNORE="[ [[ cmp dpkg dpkg-deb df find grep logger mkdir setarch" && \
     for A in ${X} ; do && \
-    [[ -n printf "%s\0" "${IGNORE}" | grep -qF "${A}" ]] && continue; && \
-    busybox echo " .. ${A}" && busybox rm -f /bin/${A} /usr/bin/${A}; && \
+    if printf "%s\0" "${IGNORE}" | grep -qF "${A}" then ; continue ; fi && \
+    busybox echo " .. ${A}" && busybox rm -f /bin/${A} /usr/bin/${A} && \
     done
 
 FROM scratch
