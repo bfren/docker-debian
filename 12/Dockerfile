@@ -1,7 +1,21 @@
 FROM busybox:1.35.0 as busybox
 
-FROM debian:bookworm-slim
+FROM debian:bookworm-slim AS build
 COPY --from=busybox /bin/busybox /bin/
+
+RUN X=`busybox --list` && \
+    IGNORE="[ [[ cmp dpkg dpkg-deb df find grep logger mkdir setarch" && \
+    echo "Removing executables and installing busybox..." && \
+    for A in ${X} ; do \
+    if printf "%s\0" "${IGNORE}" | grep -qF "${A}" ; then continue ; \
+    else busybox echo " .. ${A}" && busybox rm -f /bin/${A} /usr/bin/${A} ; \
+    fi ; \
+    done && \
+    busybox --install && \
+    echo "Build complete."
+
+FROM scratch AS final
+COPY --from=build / /
 
 LABEL org.opencontainers.image.source="https://github.com/bfren/docker-debian"
 
