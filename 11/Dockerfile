@@ -9,9 +9,8 @@ RUN X=`busybox --list` && \
     if printf "%s\0" "${IGNORE}" | grep -qF "${A}" ; then continue ; \
     else busybox echo " .. ${A}" && busybox rm -f /bin/${A} /usr/bin/${A} ; \
     fi ; \
-    done
-
-RUN busybox --install
+    done && \
+    busybox --install
 
 FROM scratch AS final
 COPY --from=build / /
