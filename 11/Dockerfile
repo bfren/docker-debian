@@ -6,13 +6,15 @@ COPY --from=busybox /bin/busybox /bin/
 RUN \
     X=`busybox --list` && \
     IGNORE="[ [[ cmp dpkg dpkg-deb df find grep logger mkdir setarch" && \
-    for A in ${X} ; do && \
-    if printf "%s\0" "${IGNORE}" | grep -qF "${A}" then ; continue ; fi && \
-    busybox echo " .. ${A}" && busybox rm -f /bin/${A} /usr/bin/${A} && \
+    for A in ${X} ; do \
+    if printf "%s\0" "${IGNORE}" | grep -qF "${A}" ; then continue ; \
+    else busybox echo " .. ${A}" && busybox rm -f /bin/${A} /usr/bin/${A} ; \
+    fi ; \
     done
 
 FROM scratch
-COPY --from=build / /
+WORKDIR /
+COPY --from=build / .
 
 LABEL org.opencontainers.image.source="https://github.com/bfren/docker-debian"
 
