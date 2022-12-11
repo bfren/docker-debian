@@ -1,17 +1,16 @@
-FROM busybox:1.35.0 as busybox
+FROM ghcr.io/bfren/busybox:<%= ${BUSYBOX_VERSION} %>-debian<%= ${DEBIAN_MINOR} %> AS busybox
 
 FROM debian:<%= ${DEBIAN_MINOR} %>-slim AS build
-COPY --from=busybox /bin/busybox /bin/
+COPY --from=busybox /busybox /bin
 
-RUN X=`busybox --list` && \
-    IGNORE="[ [[ cmp dpkg dpkg-deb df find grep logger mkdir setarch" && \
-    echo "Removing executables and installing busybox..." && \
+RUN X=$(busybox --list) ; \
+    IGNORE="[ [[ cmp dpkg dpkg-deb df find logger mkdir setarch" ; \
+    echo "Removing executables and installing busybox..." ; \
     for A in ${X} ; do \
-    if printf "%s\0" "${IGNORE}" | grep -qF "${A}" ; then continue ; \
-    else busybox echo " .. ${A}" && busybox rm -f /bin/${A} /usr/bin/${A} ; \
-    fi ; \
-    done && \
-    busybox --install && \
+    if printf "%s\0" "${IGNORE}" | busybox grep -qF "${A}" ; then continue ; \
+    else busybox echo " .. ${A}" && busybox rm -f /bin/${A} /usr/bin/${A} ; fi ; \
+    done ; \
+    busybox --install ; \
     echo "Build complete."
 
 FROM scratch AS final
@@ -26,7 +25,7 @@ ENV \
     # debug log output
     #   0: disable
     #   1: enable
-    BF_DEBUG=1 \
+    BF_DEBUG=0 \
     # path to bf executables
     BF_BIN=/usr/bin/bf \
     # path to bf library executables
