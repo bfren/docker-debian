@@ -3,7 +3,7 @@ FROM busybox:1.35.0 as busybox
 FROM debian:sid-slim AS build
 COPY --from=busybox /bin/busybox /bin/
 
-RUN X=`busybox --list` && \
+RUN X=$(busybox --list) && \
     IGNORE="[ [[ cmp dpkg dpkg-deb df find logger mkdir setarch" && \
     echo "Removing executables and installing busybox..." && \
     for A in ${X} ; do \
