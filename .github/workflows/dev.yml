@@ -1,4 +1,4 @@
-name: dev-debian11
+name: dev
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test-debian11:
+  test:
     runs-on: ubuntu-latest
     steps:
       -
@@ -24,7 +24,10 @@ jobs:
         name: Run tests
         run: |
           RUN=./tests/run-git.sh && chmod +x ${RUN} && ${RUN}
-  build-debian11:
+  build:
+    strategy:
+      matrix:
+        debian: [ "10", "11", "12", "sid" ]
     runs-on: ubuntu-latest
     steps:
       -
@@ -34,6 +37,12 @@ jobs:
         name: Get repository name
         run: echo "REPOSITORY_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
         shell: bash
+      -
+        name: Read Debian name
+        uses: bfren/read-file@v2
+        with:
+          file: ./${{ matrix.debian }}/DEBIAN_NAME
+        id: debian_name
       -
         name: Read image version
         uses: bfren/read-file@v2
@@ -77,7 +86,37 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./11/Dockerfile
+          file: ./${{ matrix.debian }}/Dockerfile
+          build-args: |
+            BF_IMAGE=${{ env.REPOSITORY_NAME }}
+            BF_VERSION=${{ steps.version.outputs.contents }}
+          push: ${{ startsWith(github.ref, 'refs/heads/') }}
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          tags: |
+            bfren/debian:debian${{ matrix.debian }}-dev
+            bfren/debian:debian${{ matrix.debian }}-${{ steps.version_major.outputs.contents }}-beta
+            bfren/debian:debian${{ matrix.debian }}-${{ steps.version_minor.outputs.contents }}-beta
+            bfren/debian:debian${{ matrix.debian }}-${{ steps.version.outputs.contents }}-beta
+            bfren/debian:${{ steps.debian_name.outputs.contents }}-dev
+            bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version_major.outputs.contents }}-beta
+            bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version_minor.outputs.contents }}-beta
+            bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version.outputs.contents }}-beta
+            ghcr.io/bfren/debian:debian${{ matrix.debian }}-dev
+            ghcr.io/bfren/debian:debian${{ matrix.debian }}-${{ steps.version_major.outputs.contents }}-beta
+            ghcr.io/bfren/debian:debian${{ matrix.debian }}-${{ steps.version_minor.outputs.contents }}-beta
+            ghcr.io/bfren/debian:debian${{ matrix.debian }}-${{ steps.version.outputs.contents }}-beta
+            ghcr.io/bfren/debian:${{ steps.debian_name.outputs.contents }}-dev
+            ghcr.io/bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version_major.outputs.contents }}-beta
+            ghcr.io/bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version_minor.outputs.contents }}-beta
+            ghcr.io/bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version.outputs.contents }}-beta
+      -
+        name: Build and push default tags
+        id: docker_build_default
+        if: matrix.debian == '11'
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./${{ matrix.debian }}/Dockerfile
           build-args: |
             BF_IMAGE=${{ env.REPOSITORY_NAME }}
             BF_VERSION=${{ steps.version.outputs.contents }}
@@ -88,26 +127,10 @@ jobs:
             bfren/debian:${{ steps.version_major.outputs.contents }}-beta
             bfren/debian:${{ steps.version_minor.outputs.contents }}-beta
             bfren/debian:${{ steps.version.outputs.contents }}-beta
-            bfren/debian:debian11-dev
-            bfren/debian:debian11-${{ steps.version_major.outputs.contents }}-beta
-            bfren/debian:debian11-${{ steps.version_minor.outputs.contents }}-beta
-            bfren/debian:debian11-${{ steps.version.outputs.contents }}-beta
-            bfren/debian:bullseye-dev
-            bfren/debian:bullseye-${{ steps.version_major.outputs.contents }}-beta
-            bfren/debian:bullseye-${{ steps.version_minor.outputs.contents }}-beta
-            bfren/debian:bullseye-${{ steps.version.outputs.contents }}-beta
             ghcr.io/bfren/debian:dev
             ghcr.io/bfren/debian:${{ steps.version_major.outputs.contents }}-beta
             ghcr.io/bfren/debian:${{ steps.version_minor.outputs.contents }}-beta
             ghcr.io/bfren/debian:${{ steps.version.outputs.contents }}-beta
-            ghcr.io/bfren/debian:debian11-dev
-            ghcr.io/bfren/debian:debian11-${{ steps.version_major.outputs.contents }}-beta
-            ghcr.io/bfren/debian:debian11-${{ steps.version_minor.outputs.contents }}-beta
-            ghcr.io/bfren/debian:debian11-${{ steps.version.outputs.contents }}-beta
-            ghcr.io/bfren/debian:bullseye-dev
-            ghcr.io/bfren/debian:bullseye-${{ steps.version_major.outputs.contents }}-beta
-            ghcr.io/bfren/debian:bullseye-${{ steps.version_minor.outputs.contents }}-beta
-            ghcr.io/bfren/debian:bullseye-${{ steps.version.outputs.contents }}-beta
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
