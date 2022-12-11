@@ -1,6 +1,6 @@
 FROM debian:11.5 AS busybox
 
-RUN apt update && apt install -y bzip2 make
+RUN apt update && apt install -y bzip2 gcc make
 ADD https://busybox.net/downloads/busybox-1.35.0.tar.bz2 /tmp
 
 WORKDIR /tmp
