@@ -1,14 +1,7 @@
-FROM debian:<%= ${DEBIAN_MINOR} %> AS busybox
-
-RUN apt update && apt install -y bzip2 gcc make
-ADD https://busybox.net/downloads/busybox-<%= ${BUSYBOX_VERSION} %>.tar.bz2 /tmp
-
-WORKDIR /tmp
-RUN tar -xf busybox-<%= ${BUSYBOX_VERSION} %>.tar.bz2
-RUN cd busybox-<%= ${BUSYBOX_VERSION} %> ; make defconfig ; make ; make install
+FROM ghcr.io/bfren/busybox:<%= ${BUSYBOX_VERSION} %>-debian<%= ${DEBIAN_MINOR} %> AS busybox
 
 FROM debian:<%= ${DEBIAN_MINOR} %>-slim AS build
-COPY --from=busybox /tmp/busybox-<%= ${BUSYBOX_VERSION} %>/busybox /bin/
+COPY --from=busybox /busybox /bin
 
 RUN X=$(busybox --list) ; \
     IGNORE="[ [[ cmp dpkg dpkg-deb df find logger mkdir setarch" ; \

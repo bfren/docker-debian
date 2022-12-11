@@ -1,14 +1,7 @@
-FROM debian:11.5 AS busybox
-
-RUN apt update && apt install -y bzip2 gcc make
-ADD https://busybox.net/downloads/busybox-1.35.0.tar.bz2 /tmp
-
-WORKDIR /tmp
-RUN tar -xf busybox-1.35.0.tar.bz2
-RUN cd busybox-1.35.0 ; make defconfig ; make ; make install
+FROM ghcr.io/bfren/busybox:1.35.0-debian11.5 AS busybox
 
 FROM debian:11.5-slim AS build
-COPY --from=busybox /tmp/busybox-1.35.0/busybox /bin/
+COPY --from=busybox /busybox /bin
 
 RUN X=$(busybox --list) ; \
     IGNORE="[ [[ cmp dpkg dpkg-deb df find logger mkdir setarch" ; \
