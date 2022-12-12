@@ -1,7 +1,7 @@
 FROM ghcr.io/bfren/busybox:1.35.0-debiansid AS busybox
 
 FROM debian:sid-slim AS build
-COPY --from=busybox /busybox /bin
+COPY --from=busybox / /bin
 
 RUN X=$(busybox --list) ; \
     IGNORE="[ [[ cmp dpkg dpkg-deb df find logger mkdir setarch" ; \
