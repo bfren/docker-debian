@@ -1,4 +1,4 @@
-FROM ghcr.io/bfren/busybox:1.35.0-debiansid AS busybox
+FROM ghcr.io/bfren/busybox:1.36.0-debiansid AS busybox
 
 FROM debian:sid-slim AS build
 COPY --from=busybox / /bin
