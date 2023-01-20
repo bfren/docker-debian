@@ -5,7 +5,7 @@ export BF_E=`basename ${0}`
 
 
 #======================================================================================================================
-# Disable Debian interactive frontend.
+# Disable interactive frontend and terminal.
 #======================================================================================================================
 
 export DEBIAN_FRONTEND=noninteractive
