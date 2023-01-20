@@ -28,7 +28,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [ "amd64", "arm/v7", "arm64/v8" ]
         debian: [ "10", "11", "12", "sid" ]
     runs-on: ubuntu-latest
     steps:
@@ -93,7 +92,7 @@ jobs:
             BF_IMAGE=${{ env.REPOSITORY_NAME }}
             BF_VERSION=${{ steps.version.outputs.contents }}
           push: ${{ startsWith(github.ref, 'refs/heads/') }}
-          platforms: linux/${{ matrix.arch }}
+          platforms: linux/amd64,linux/arm/v7,linux/arm64/v8
           tags: |
             bfren/debian:debian${{ matrix.debian }}-dev
             bfren/debian:debian${{ matrix.debian }}-${{ steps.version_major.outputs.contents }}-beta
@@ -123,7 +122,7 @@ jobs:
             BF_IMAGE=${{ env.REPOSITORY_NAME }}
             BF_VERSION=${{ steps.version.outputs.contents }}
           push: ${{ startsWith(github.ref, 'refs/heads/') }}
-          platforms: linux/${{ matrix.arch }}
+          platforms: linux/amd64,linux/arm/v7,linux/arm64/v8
           tags: |
             bfren/debian:dev
             bfren/debian:${{ steps.version_major.outputs.contents }}-beta
