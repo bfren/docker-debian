@@ -35,7 +35,7 @@ bf-image
 INSTALL=/tmp/install
 [[ ! -f ${INSTALL} ]] && bf-error "${INSTALL} does not exist."
 
-chmod +x ${INSTALL} && ${INSTALL}
+chmod +x ${INSTALL} && DEBIAN_FRONTEND=noninteractive ${INSTALL}
 bf-done
 
 
