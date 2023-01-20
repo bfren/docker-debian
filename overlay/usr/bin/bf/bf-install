@@ -2,6 +2,7 @@
 
 set -euo pipefail
 export BF_E=`basename ${0}`
+export TERM=dumb
 
 
 #======================================================================================================================
@@ -35,7 +36,7 @@ bf-image
 INSTALL=/tmp/install
 [[ ! -f ${INSTALL} ]] && bf-error "${INSTALL} does not exist."
 
-chmod +x ${INSTALL} && DEBIAN_FRONTEND=noninteractive ${INSTALL}
+chmod +x ${INSTALL} && ${INSTALL}
 bf-done
 
 
