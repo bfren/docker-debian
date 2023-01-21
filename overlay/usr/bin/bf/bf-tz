@@ -10,7 +10,7 @@ set -euo pipefail
 
 [[ -z "${1-}" ]] && bf-error "You must provide a timezone." "bf-tz"
 TZ=${1}
-ZONE_INFO=/usr/share/zoneinfo
+ZONE_INFO=/usr/share/zoneinfo/${TZ}
 
 
 #======================================================================================================================
@@ -18,14 +18,10 @@ ZONE_INFO=/usr/share/zoneinfo
 #======================================================================================================================
 
 # check the specified timezone exists
-if [ ! -f "${ZONE_INFO}/${TZ}" ] ; then
-    clear
-    bf-error "${TZ} is not a recognised timezone." "bf-tz"
-fi
+[[ -f "${ZONE_INFO}" ]] || bf-error "${TZ} is not a recognised timezone." "bf-tz"
 
 # set timezone info
 bf-echo "Setting timezone to ${TZ}..." "bf-tz"
 rm -f /etc/localtime
-ln ${ZONE_INFO}/${TZ} /etc/localtime
-clear
+ln ${ZONE_INFO} /etc/localtime
 bf-done "bf-tz"

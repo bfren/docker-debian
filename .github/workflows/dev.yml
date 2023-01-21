@@ -26,8 +26,9 @@ jobs:
           RUN=./tests/run-git.sh && chmod +x ${RUN} && ${RUN}
   build:
     strategy:
+      fail-fast: false
       matrix:
-        debian: [ "10", "11", "12", "sid" ]
+        debian: [ "10", "11", "12" ]
     runs-on: ubuntu-latest
     steps:
       -
@@ -91,7 +92,7 @@ jobs:
             BF_IMAGE=${{ env.REPOSITORY_NAME }}
             BF_VERSION=${{ steps.version.outputs.contents }}
           push: ${{ startsWith(github.ref, 'refs/heads/') }}
-          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          platforms: linux/amd64,linux/arm/v7,linux/arm64/v8
           tags: |
             bfren/debian:debian${{ matrix.debian }}-dev
             bfren/debian:debian${{ matrix.debian }}-${{ steps.version_major.outputs.contents }}-beta
@@ -101,14 +102,6 @@ jobs:
             bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version_major.outputs.contents }}-beta
             bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version_minor.outputs.contents }}-beta
             bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version.outputs.contents }}-beta
-            ghcr.io/bfren/debian:debian${{ matrix.debian }}-dev
-            ghcr.io/bfren/debian:debian${{ matrix.debian }}-${{ steps.version_major.outputs.contents }}-beta
-            ghcr.io/bfren/debian:debian${{ matrix.debian }}-${{ steps.version_minor.outputs.contents }}-beta
-            ghcr.io/bfren/debian:debian${{ matrix.debian }}-${{ steps.version.outputs.contents }}-beta
-            ghcr.io/bfren/debian:${{ steps.debian_name.outputs.contents }}-dev
-            ghcr.io/bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version_major.outputs.contents }}-beta
-            ghcr.io/bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version_minor.outputs.contents }}-beta
-            ghcr.io/bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version.outputs.contents }}-beta
       -
         name: Build and push default tags
         id: docker_build_default
@@ -121,16 +114,12 @@ jobs:
             BF_IMAGE=${{ env.REPOSITORY_NAME }}
             BF_VERSION=${{ steps.version.outputs.contents }}
           push: ${{ startsWith(github.ref, 'refs/heads/') }}
-          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          platforms: linux/amd64,linux/arm/v7,linux/arm64/v8
           tags: |
             bfren/debian:dev
             bfren/debian:${{ steps.version_major.outputs.contents }}-beta
             bfren/debian:${{ steps.version_minor.outputs.contents }}-beta
             bfren/debian:${{ steps.version.outputs.contents }}-beta
-            ghcr.io/bfren/debian:dev
-            ghcr.io/bfren/debian:${{ steps.version_major.outputs.contents }}-beta
-            ghcr.io/bfren/debian:${{ steps.version_minor.outputs.contents }}-beta
-            ghcr.io/bfren/debian:${{ steps.version.outputs.contents }}-beta
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}

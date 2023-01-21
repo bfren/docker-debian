@@ -17,6 +17,7 @@ RUN X=$(busybox --list) ; \
 FROM scratch AS final
 COPY --from=build / /
 
+LABEL org.opencontainers.image.description="Debian base image with BusyBox preinstalled and various custom executables."
 LABEL org.opencontainers.image.source="https://github.com/bfren/docker-debian"
 
 ARG BF_IMAGE
