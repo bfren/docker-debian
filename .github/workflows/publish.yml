@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        debian: [ "10", "11", "12", "sid" ]
+        debian: [ "10", "11", "12" ]
     runs-on: ubuntu-latest
     steps:
       -
@@ -92,16 +92,6 @@ jobs:
             bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version_major.outputs.contents }}
             bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version_minor.outputs.contents }}
             bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version.outputs.contents }}
-            ghcr.io/bfren/debian:debian${{ matrix.debian }}
-            ghcr.io/bfren/debian:debian${{ matrix.debian }}-${{ steps.version_major.outputs.contents }}
-            ghcr.io/bfren/debian:debian${{ matrix.debian }}-${{ steps.version_minor.outputs.contents }}
-            ghcr.io/bfren/debian:debian${{ matrix.debian }}-${{ steps.version.outputs.contents }}
-            ghcr.io/bfren/debian:debian${{ steps.debian_minor.outputs.contents }}
-            ghcr.io/bfren/debian:debian${{ steps.debian_minor.outputs.contents }}-${{ steps.version.outputs.contents }}
-            ghcr.io/bfren/debian:${{ steps.debian_name.outputs.contents }}
-            ghcr.io/bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version_major.outputs.contents }}
-            ghcr.io/bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version_minor.outputs.contents }}
-            ghcr.io/bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version.outputs.contents }}
       -
         name: Build and push default tags
         id: docker_build_default
@@ -120,10 +110,6 @@ jobs:
             bfren/debian:${{ steps.version_major.outputs.contents }}
             bfren/debian:${{ steps.version_minor.outputs.contents }}
             bfren/debian:${{ steps.version.outputs.contents }}
-            ghcr.io/bfren/debian:latest
-            ghcr.io/bfren/debian:${{ steps.version_major.outputs.contents }}
-            ghcr.io/bfren/debian:${{ steps.version_minor.outputs.contents }}
-            ghcr.io/bfren/debian:${{ steps.version.outputs.contents }}
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
