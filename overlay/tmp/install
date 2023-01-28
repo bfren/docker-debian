@@ -10,6 +10,7 @@ export BF_E=`basename ${0}`
 
 apt update && apt install -y --no-install-recommends \
     ca-certificates \
+    figlet \
     openssl
 
 
