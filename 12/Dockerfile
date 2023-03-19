@@ -1,4 +1,4 @@
-FROM ghcr.io/bfren/busybox:1.35.0-debianbookworm AS busybox
+FROM ghcr.io/bfren/busybox:1.36.0-debianbookworm AS busybox
 
 FROM debian:bookworm-slim AS build
 COPY --from=busybox / /bin
