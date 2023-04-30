@@ -24,6 +24,8 @@ ARG BF_IMAGE
 ARG BF_VERSION
 
 ENV \
+    # Debian version
+    DEBIAN_MINOR=11.6 \
     # debug log output
     #   0: disable
     #   1: enable
