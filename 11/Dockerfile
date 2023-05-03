@@ -1,6 +1,6 @@
-FROM ghcr.io/bfren/busybox:1.36.0-debian11.6 AS busybox
+FROM ghcr.io/bfren/busybox:1.36.0-debian11.7 AS busybox
 
-FROM debian:11.6-slim AS build
+FROM debian:11.7-slim AS build
 COPY --from=busybox / /bin
 
 RUN X=$(busybox --list) ; \
@@ -25,7 +25,7 @@ ARG BF_VERSION
 
 ENV \
     # Debian version
-    DEBIAN_MINOR=11.6 \
+    DEBIAN_MINOR=11.7 \
     # debug log output
     #   0: disable
     #   1: enable
