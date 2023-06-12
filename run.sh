@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 IMAGE=`cat VERSION`
 DEBIAN=${1:-11}
