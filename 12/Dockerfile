@@ -5,7 +5,7 @@ COPY --from=busybox / /bin
 
 RUN echo "Removing essential packages that will be replaced by busybox..." ; \
     REMOVE="grep gzip hostname mount sed" ; \
-    apt remove ${REMOVE} -y --allow-remove-essential && apt autoremove -y ;
+    apt remove ${REMOVE} -y --allow-remove-essential && apt autoremove -y
 RUN echo "Removing executables that will be replaced by busybox..." ; \
     X=$(busybox --list-full) ; \
     IGNORE="[ [[ usr/bin/cmp usr/bin/dpkg usr/bin/dpkg-deb bin/df usr/bin/find usr/bin/logger bin/mkdir bin/setarch bin/tar" ; \
@@ -13,7 +13,7 @@ RUN echo "Removing executables that will be replaced by busybox..." ; \
     if printf "%s\0" "${IGNORE}" | busybox grep -qF "${A}" ; then continue ; \
     else busybox echo " .. /${A}" && busybox rm -f /${A} ; \
     fi ; \
-    done ; \
+    done
 RUN echo "Installing busybox..." ; \
     busybox --install ; \
     echo "Build complete."
