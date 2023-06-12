@@ -11,7 +11,7 @@ RUN REMOVE="grep gzip hostname mount sed" ; \
     X=$(busybox --list) ; \
     for A in ${X} ; do \
     if printf "%s\0" "${IGNORE}" | busybox grep -qF "${A}" ; then continue ; \
-    else busybox echo " .. ${A}" && busybox rm -f /bin/${A} /usr/bin/${A} ; \
+    else busybox echo " .. ${A}" && busybox rm -f /bin/${A} /usr/bin/${A} /usr/sbin/${A} ; \
     fi ; \
     done ; \
     busybox --install ; \
