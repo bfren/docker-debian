@@ -3,7 +3,15 @@ FROM ghcr.io/bfren/busybox:1.36.1-debianbookworm AS busybox
 FROM debian:bookworm-slim AS build
 COPY --from=busybox / /bin
 
-RUN echo "Installing busybox..." ; \
+RUN echo "Removing executables that will be replaced by busybox..." ; \
+    X=$(busybox --list-full) ; \
+    IGNORE="[ [[ cmp dpkg dpkg-deb df find logger mkdir setarch" ; \
+    for A in ${X} ; do \
+    if printf "%s\0" "${IGNORE}" | busybox grep -qF "${A}" ; then continue ; \
+    else busybox echo " .. ${A}" && busybox rm -f /bin/${A} /usr/bin/${A}; \
+    fi ; \
+    done ; \
+    echo "Installing busybox..." ; \
     busybox --install ; \
     echo "Build complete."
 
