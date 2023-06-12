@@ -3,12 +3,12 @@ FROM ghcr.io/bfren/busybox:1.36.1-debian10.13 AS busybox
 FROM debian:10.13-slim AS build
 COPY --from=busybox / /bin
 
-RUN X=$(busybox --list) ; \
-    REMOVE="grep gzip hostname mount sed" ; \
+RUN REMOVE="grep gzip hostname mount sed" ; \
     echo "Removing essential packages (to be replaced by busybox)..." ; \
-    apt remove ${REMOVE} -y --allow-remove-essential ; \
+    apt remove ${REMOVE} -y --allow-remove-essential && apt autoremove -y ; \
     IGNORE="[ [[ cmp dpkg dpkg-deb df find logger mkdir setarch" ; \
     echo "Removing executables and installing busybox..." ; \
+    X=$(busybox --list) ; \
     for A in ${X} ; do \
     if printf "%s\0" "${IGNORE}" | busybox grep -qF "${A}" ; then continue ; \
     else busybox echo " .. ${A}" && busybox rm -f /bin/${A} /usr/bin/${A} ; \
