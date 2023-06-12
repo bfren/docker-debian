@@ -4,6 +4,9 @@ FROM debian:11.7-slim AS build
 COPY --from=busybox / /bin
 
 RUN X=$(busybox --list) ; \
+    REMOVE="grep gzip hostname mount sed" ; \
+    echo "Removing essential packages (to be replaced by busybox)..." ; \
+    apt remove ${REMOVE} -y --allow-remove-essential ; \
     IGNORE="[ [[ cmp dpkg dpkg-deb df find logger mkdir setarch" ; \
     echo "Removing executables and installing busybox..." ; \
     for A in ${X} ; do \
