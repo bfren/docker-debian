@@ -5,10 +5,10 @@ COPY --from=busybox / /bin
 
 RUN echo "Removing executables that will be replaced by busybox..." ; \
     X=$(busybox --list) ; \
-    IGNORE="[ [[ cmp dpkg dpkg-deb df find logger mkdir setarch" ; \
+    IGNORE="[ [[ cmp dpkg dpkg-deb df find grep logger mkdir setarch" ; \
     for A in ${X} ; do \
-    if printf "%s\0" "${IGNORE}" | busybox grep -qF "${A}" ; then continue ; \
-    else busybox echo " .. ${A}" && busybox rm -f /bin/${A} /usr/bin/${A}; \
+    if printf "%s\0" "${IGNORE}" | busybox grep -qF `basename ${A}` ; then continue ; \
+    else busybox echo " .. /${A}" && busybox rm -f /${A} ; \
     fi ; \
     done ; \
     echo "Installing busybox..." ; \
