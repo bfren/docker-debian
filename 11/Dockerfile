@@ -5,7 +5,7 @@ COPY --from=busybox / /bin
 
 RUN echo "Removing executables that will be replaced by busybox..." ; \
     X=$(busybox --list-full) ; \
-    IGNORE="[ [[ cmp dpkg dpkg-deb df find grep logger mkdir setarch" ; \
+    IGNORE="[ [[ addgroup adduser cmp dpkg dpkg-deb df find grep logger mkdir setarch" ; \
     for A in ${X} ; do \
     if busybox printf "%s\0" "${IGNORE}" | busybox grep -q `busybox basename ${A}` ; then continue ; \
     else busybox echo " .. /${A}" && busybox rm -f /${A} ; \
