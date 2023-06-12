@@ -5,13 +5,24 @@ export BF_E=`basename ${0}`
 
 
 #======================================================================================================================
-# Add packages.
+# Upgrade system packages.
 #======================================================================================================================
 
-apt update && apt install -y --no-install-recommends \
+bf-echo "Upgrading system packages..."
+apt update && apt upgrade -y
+bf-done
+
+
+#======================================================================================================================
+# Add additional packages.
+#======================================================================================================================
+
+bf-echo "Adding additional packages..."
+apt update && apt install -y \
     ca-certificates \
     figlet \
     openssl
+bf-done
 
 
 #======================================================================================================================
@@ -25,4 +36,7 @@ bf-tz "Europe/London"
 # Cleanup.
 #======================================================================================================================
 
+bf-echo "Cleaning up caches and unnecessary directories..."
+bf-rmrf /var/lib/apt/lists/*
 bf-rmrf /usr/share/man
+bf-done
