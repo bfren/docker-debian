@@ -10,4 +10,4 @@ docker buildx build \
     -t debian${DEBIAN}-dev \
     . \
     && \
-    docker run -it debian${DEBIAN}-dev bash
+    docker run -it debian${DEBIAN}-dev sh
