@@ -4,7 +4,7 @@ FROM debian:10.13-slim AS build
 COPY --from=busybox / /bin
 
 RUN echo "Removing essential packages that will be replaced by busybox..." ; \
-    REMOVE="grep gzip hostname mount sed" ; \
+    REMOVE="bash grep gzip hostname mount sed" ; \
     apt remove ${REMOVE} -y --allow-remove-essential && apt autoremove -y ; \
     echo "Removing executables that will be replaced by busybox..." ; \
     X=$(busybox --list-full) ; \
