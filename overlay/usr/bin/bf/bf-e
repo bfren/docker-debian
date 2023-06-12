@@ -40,6 +40,6 @@ fi
 # Echo text in a specified ANSI colour.
 #======================================================================================================================
 
-DATE=$(date '+%Y-%m-%d %H:%M:%S')
+DATE=$(busybox date '+%Y-%m-%d %H:%M:%S')
 RESET_COLOUR="\e[0;39m"
-echo -e "[${NAMESPACE}] ${DATE} | ${COLOUR}${PREFIX-}${TEXT}${SUFFIX-}${RESET_COLOUR}"
+busybox echo -e "[${NAMESPACE}] ${DATE} | ${COLOUR}${PREFIX-}${TEXT}${SUFFIX-}${RESET_COLOUR}"

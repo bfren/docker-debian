@@ -22,6 +22,6 @@ ZONE_INFO=/usr/share/zoneinfo/${TZ}
 
 # set timezone info
 bf-echo "Setting timezone to ${TZ}..." "bf-tz"
-rm -f /etc/localtime
-ln ${ZONE_INFO} /etc/localtime
+busybox rm -f /etc/localtime
+busybox ln ${ZONE_INFO} /etc/localtime
 bf-done "bf-tz"

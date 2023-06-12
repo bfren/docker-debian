@@ -3,18 +3,7 @@ FROM ghcr.io/bfren/busybox:1.36.1-debian10.13 AS busybox
 FROM debian:10.13-slim AS build
 COPY --from=busybox / /bin
 
-RUN echo "Removing essential packages that will be replaced by busybox..." ; \
-    REMOVE="bash gzip hostname mount sed" ; \
-    apt remove ${REMOVE} -y --allow-remove-essential && apt autoremove -y ; \
-    echo "Removing executables that will be replaced by busybox..." ; \
-    X=$(busybox --list-full) ; \
-    IGNORE="[ [[ usr/bin/cmp usr/bin/dpkg usr/bin/dpkg-deb bin/df usr/bin/find bin/grep usr/bin/logger bin/mkdir bin/setarch bin/tar" ; \
-    for A in ${X} ; do \
-    if printf "%s\0" "${IGNORE}" | busybox grep -qF "${A}" ; then continue ; \
-    else busybox echo " .. /${A}" && busybox rm -f /${A} ; \
-    fi ; \
-    done ; \
-    echo "Installing busybox..." ; \
+RUN echo "Installing busybox..." ; \
     busybox --install ; \
     echo "Build complete."
 

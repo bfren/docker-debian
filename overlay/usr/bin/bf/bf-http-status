@@ -18,10 +18,10 @@ URL=${1}
 #======================================================================================================================
 
 RESULT=$( \
-    wget --quiet --server-response --spider --timeout=10 --tries=1 "${URL}" 2>&1 \
-    | grep "HTTP/" \
-    | awk '{print $2}' \
-    | tail -1 \
+    busybox wget --quiet --server-response --spider --timeout=10 --tries=1 "${URL}" 2>&1 \
+    | busybox grep "HTTP/" \
+    | busybox awk '{print $2}' \
+    | busybox tail -1 \
     || true \
 )
 

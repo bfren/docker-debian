@@ -8,13 +8,13 @@ set -euo pipefail
 #======================================================================================================================
 
 bf-debug "Clearing /tmp..." "bf-clear"
-rm -rf /tmp/*
+busybox rm -rf /tmp/*
 
 bf-debug "Clearing caches..." "bf-clear"
-rm -rf /var/lib/apt/lists/*
-rm -rf /var/cache/*
+busybox rm -rf /var/lib/apt/lists/*
+busybox rm -rf /var/cache/*
 
 bf-debug "Removing .empty files..."
-find / -type f -name ".empty" -delete 2>/dev/null
+busybox find / -type f -name ".empty" -delete 2>/dev/null
 
 bf-debug "Done." "bf-clear"
