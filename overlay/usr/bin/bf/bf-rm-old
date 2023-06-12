@@ -8,11 +8,11 @@ set -euo pipefail
 #======================================================================================================================
 
 usage () {
-    busybox echo "Usage: `busybox basename ${0}` -t d|f -d DAYS ROOT_DIRECTORY" 2>&1
-    busybox echo "Deletes subdirectories or files old than DAYS number of days within ROOT_DIRECTORY."
-    busybox echo "    -t    d: directories, f: files."
-    busybox echo "    -d    The number of days."
-    busybox echo "    -h    Show this usage message."
+    echo "Usage: `basename ${0}` -t d|f -d DAYS ROOT_DIRECTORY" 2>&1
+    echo "Deletes subdirectories or files old than DAYS number of days within ROOT_DIRECTORY."
+    echo "    -t    d: directories, f: files."
+    echo "    -d    The number of days."
+    echo "    -h    Show this usage message."
     exit 2
 }
 

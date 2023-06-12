@@ -16,8 +16,8 @@ export TERM=dumb
 # Set permissions.
 #======================================================================================================================
 
-busybox chmod +x /usr/bin/esh
-busybox chmod +x ${BF_BIN}/*
+chmod +x /usr/bin/esh
+chmod +x ${BF_BIN}/*
 
 bf-ch -o root:root -m 1777 /etc/bf/src
 bf-ch -o root:root -r /etc/bf/templates && \
@@ -34,7 +34,7 @@ bf-ch -o root:root -m 0555 -t f /usr/lib/bf
 INSTALL=/tmp/install
 [[ ! -f ${INSTALL} ]] && bf-error "${INSTALL} does not exist."
 
-busybox chmod +x ${INSTALL} && ${INSTALL}
+chmod +x ${INSTALL} && ${INSTALL}
 bf-done
 
 
@@ -42,15 +42,15 @@ bf-done
 # Store Debian version.
 #======================================================================================================================
 
-busybox echo "${DEBIAN_MINOR}" > /BF_DEBIAN
+echo "${DEBIAN_MINOR}" > /BF_DEBIAN
 
 
 #======================================================================================================================
 # Store image version.
 #======================================================================================================================
 
-busybox echo "${BF_IMAGE/docker-/}" > /BF_IMAGE
-busybox echo "${BF_VERSION}" > /BF_VERSION
+echo "${BF_IMAGE/docker-/}" > /BF_IMAGE
+echo "${BF_VERSION}" > /BF_VERSION
 bf-image
 
 

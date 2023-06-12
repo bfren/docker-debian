@@ -8,10 +8,10 @@ set -euo pipefail
 #======================================================================================================================
 
 usage () {
-    busybox echo "Usage: `busybox basename ${0}` -m full|simple URL" 2>&1
-    busybox echo
-    busybox echo "    -m    Either 'full' (checks HTTP status) or 'simple' (default)."
-    busybox echo "    -h    Show this usage message."
+    echo "Usage: `basename ${0}` -m full|simple URL" 2>&1
+    echo
+    echo "    -m    Either 'full' (checks HTTP status) or 'simple' (default)."
+    echo "    -h    Show this usage message."
     exit 2
 }
 
@@ -38,7 +38,7 @@ URL="${1-}"
 if [ "${MODE}" = "simple" ] ; then
 
     bf-debug "Loading ${URL}." "bf-test-url"
-    busybox wget --no-verbose --spider --timeout=10 --tries=1 "${URL}" || exit 1
+    wget --no-verbose --spider --timeout=10 --tries=1 "${URL}" || exit 1
 
 elif [ "${MODE}" = "full" ] ; then
 
@@ -46,7 +46,7 @@ elif [ "${MODE}" = "full" ] ; then
     STATUS=$(bf-http-status "${URL}" || true)
 
     # if STATUS is not a number, something went wrong loading the URL
-    if busybox echo "${STATUS}" | grep -q '[^0-9]' ; then
+    if echo "${STATUS}" | grep -q '[^0-9]' ; then
         bf-error "Invalid or inaccessible URL: ${URL}." "bf-test-url"
     fi
 

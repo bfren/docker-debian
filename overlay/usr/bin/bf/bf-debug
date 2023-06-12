@@ -14,5 +14,5 @@ set -euo pipefail
 if [ "${BF_DEBUG-}" = "1" ] ; then
     GREY="\e[1;30m"
     OUTPUT=$(bf-e "bf" "${GREY}" "${1-}" "${2-}") # capture output so the whole thing can be output in grey
-    busybox echo -e "${GREY}${OUTPUT}"
+    echo -e "${GREY}${OUTPUT}"
 fi

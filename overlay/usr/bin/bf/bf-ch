@@ -8,18 +8,18 @@ set -euo pipefail
 #======================================================================================================================
 
 usage () {
-    busybox echo "Usage: `busybox basename ${0}` [-o|-m] [-t f|d] [-r] FILE_OR_DIRECTORY_GLOB" 2>&1
-    busybox echo
-    busybox echo "Set change action:"
-    busybox echo "    -o    Use chown: Set ownership to this user / group."
-    busybox echo "    -m    Use chmod: Set permissions to this mode."
-    busybox echo
-    busybox echo "Additional optional arguments:"
-    busybox echo "    -t    Only apply to matching files (f) or directories (d)."
-    busybox echo "    -r    If type is not specified, adds -R to recurse."
-    busybox echo
-    busybox echo "Usage:"
-    busybox echo "    -h    Show this usage message."
+    echo "Usage: `basename ${0}` [-o|-m] [-t f|d] [-r] FILE_OR_DIRECTORY_GLOB" 2>&1
+    echo
+    echo "Set change action:"
+    echo "    -o    Use chown: Set ownership to this user / group."
+    echo "    -m    Use chmod: Set permissions to this mode."
+    echo
+    echo "Additional optional arguments:"
+    echo "    -t    Only apply to matching files (f) or directories (d)."
+    echo "    -r    If type is not specified, adds -R to recurse."
+    echo
+    echo "Usage:"
+    echo "    -h    Show this usage message."
     exit 2
 }
 
@@ -51,12 +51,12 @@ if [ -n "${OWNER-}" ] ; then
 
     if [ "${RECURSE-}" = "1" ] ; then
         bf-debug " .. recursively." "bf-ch"
-        busybox chown -R ${OWNER} ${GLOB}
+        chown -R ${OWNER} ${GLOB}
     else
         [[ -n "${TYPE-}" ]] && bf-debug " .. type ${TYPE}." "bf-ch"
         case "${TYPE-}" in
-            f|d) busybox find ${GLOB} -type ${TYPE} -exec busybox chown ${OWNER} {} + ;;
-            *) busybox chown ${OWNER} ${GLOB} ;;
+            f|d) find ${GLOB} -type ${TYPE} -exec chown ${OWNER} {} + ;;
+            *) chown ${OWNER} ${GLOB} ;;
         esac
     fi
 
