@@ -1,4 +1,4 @@
-FROM ghcr.io/bfren/busybox:<%= ${BUSYBOX_VERSION} %>-debian<%= ${DEBIAN_MINOR} %> AS busybox
+FROM ghcr.io/bfren/busybox:<%= ${BUSYBOX_IMAGE} %> AS busybox
 
 FROM debian:<%= ${DEBIAN_MINOR} %>-slim AS build
 COPY --from=busybox / /bin
