@@ -3,14 +3,15 @@ FROM ghcr.io/bfren/busybox:1.36.1-debian11.7 AS busybox
 FROM debian:11.7-slim AS build
 COPY --from=busybox / /bin
 
-RUN X=$(busybox --list) ; \
-    IGNORE="[ [[ cmp dpkg dpkg-deb df find logger mkdir setarch" ; \
-    echo "Removing executables and installing busybox..." ; \
+RUN echo "Removing executables that will be replaced by busybox..." ; \
+    X=$(busybox --list-full) ; \
+    IGNORE="[ [[ addgroup adduser cmp dpkg dpkg-deb df find grep logger mkdir setarch" ; \
     for A in ${X} ; do \
-    if printf "%s\0" "${IGNORE}" | busybox grep -qF "${A}" ; then continue ; \
-    else busybox echo " .. ${A}" && busybox rm -f /bin/${A} /usr/bin/${A} ; \
+    if busybox printf "%s\0" "${IGNORE}" | busybox grep -q `busybox basename ${A}` ; then continue ; \
+    else busybox echo " .. /${A}" && busybox rm -f /${A} ; \
     fi ; \
     done ; \
+    echo "Installing busybox..." ; \
     busybox --install ; \
     echo "Build complete."
 

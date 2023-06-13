@@ -1,6 +1,6 @@
-FROM ghcr.io/bfren/busybox:1.36.1-debian10.13 AS busybox
+FROM ghcr.io/bfren/busybox:1.36.1-debiantrixie AS busybox
 
-FROM debian:10.13-slim AS build
+FROM debian:trixie-slim AS build
 COPY --from=busybox / /bin
 
 RUN echo "Removing executables that will be replaced by busybox..." ; \
@@ -26,7 +26,7 @@ ARG BF_VERSION
 
 ENV \
     # Debian version
-    DEBIAN_MINOR=10.13 \
+    DEBIAN_MINOR=trixie \
     # debug log output
     #   0: disable
     #   1: enable
@@ -41,7 +41,7 @@ ENV \
     PATH=${BF_BIN}:${PATH}
 
 COPY ./overlay /
-COPY ./10/overlay /
+COPY ./13/overlay /
 
 RUN chmod +x ${BF_BIN}/bf-install && bf-install
 
