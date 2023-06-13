@@ -1,7 +1,7 @@
 #!/bin/bash
 
 IMAGE=`cat VERSION`
-DEBIAN=${1:-11}
+DEBIAN=${1:-12}
 
 docker buildx build \
     --build-arg BF_IMAGE=debian \
