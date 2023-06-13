@@ -1,6 +1,6 @@
-FROM ghcr.io/bfren/busybox:1.36.1-debianbookworm AS busybox
+FROM ghcr.io/bfren/busybox:1.36.1-debian12.0 AS busybox
 
-FROM debian:bookworm-slim AS build
+FROM debian:12.0-slim AS build
 COPY --from=busybox / /bin
 
 RUN echo "Removing executables that will be replaced by busybox..." ; \
@@ -26,7 +26,7 @@ ARG BF_VERSION
 
 ENV \
     # Debian version
-    DEBIAN_MINOR=bookworm \
+    DEBIAN_MINOR=12.0 \
     # debug log output
     #   0: disable
     #   1: enable
