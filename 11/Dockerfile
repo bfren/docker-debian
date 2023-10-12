@@ -1,6 +1,6 @@
-FROM ghcr.io/bfren/busybox:1.36.1-debian11.7 AS busybox
+FROM ghcr.io/bfren/busybox:1.36.1-debian11.8 AS busybox
 
-FROM debian:11.7-slim AS build
+FROM debian:11.8-slim AS build
 COPY --from=busybox / /bin
 
 RUN echo "Removing executables that will be replaced by busybox..." ; \
@@ -26,7 +26,7 @@ ARG BF_VERSION
 
 ENV \
     # Debian version
-    DEBIAN_MINOR=11.7 \
+    DEBIAN_MINOR=11.8 \
     # debug log output
     #   0: disable
     #   1: enable
