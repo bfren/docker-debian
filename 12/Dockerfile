@@ -13,7 +13,10 @@ RUN \
     echo "Nushell: 0.86.0" >> /log
 
 WORKDIR /tmp
-RUN case "${TARGETPLATFORM}" in \
+RUN \
+    # build a URL to download and extract Nushell binaries from a release
+    echo "Installing Nushell." && \
+    case "${TARGETPLATFORM}" in \
         linux/amd64) ARCH="x86_64" ; COMP="gnu" ;; \
         linux/arm/v7) ARCH="armv7" ; COMP="gnueabihf" ;; \
         linux/arm64) ARCH="aarch64" ; COMP="gnu" ;; \
@@ -21,10 +24,8 @@ RUN case "${TARGETPLATFORM}" in \
     esac && \
     NAME=nu-0.86.0-${ARCH}-unknown-linux-${COMP} && \
     URL=https://github.com/nushell/nushell/releases/download/0.86.0/${NAME}.tar.gz && \
-    echo "Downloading ${URL}..." && \
     wget ${URL} && \
     tar -oxzf ${NAME}.tar.gz && \
-    echo "Moving files to /nu folders..." && \
     mkdir /nu && \
     mv ${NAME}/nu /nu && \
     mkdir /nu-config && \
@@ -47,7 +48,7 @@ COPY --from=build /nu-plugins/ /root/.config/nushell/plugins/
 
 
 #======================================================================================================================
-# STAGE 2: load Busybox
+# STAGE 2: load busybox
 #======================================================================================================================
 
 FROM ghcr.io/bfren/busybox:1.36.1-debian12.2 AS busybox-executable
@@ -60,24 +61,32 @@ FROM ghcr.io/bfren/busybox:1.36.1-debian12.2 AS busybox-executable
 FROM debian:12.2-slim AS busybox
 COPY --from=busybox-executable / /bin
 
-RUN echo "Removing executables that will be replaced by busybox..." ; \
+RUN \
+    # delete all binaries that will be replaced by busybox - those in ${IGNORE} will be left alone
+    echo "Installing busybox." && \
     X=$(busybox --list-full) ; \
     IGNORE="[ [[ addgroup adduser cmp dpkg dpkg-deb df find grep logger mkdir setarch" ; \
     for A in ${X} ; do \
     if busybox printf "%s\0" "${IGNORE}" | busybox grep -q `busybox basename ${A}` ; then continue ; \
-    else busybox echo " .. /${A}" && busybox rm -f /${A} ; \
+    else busybox rm -f /${A} ; \
     fi ; \
     done ; \
-    echo "Installing busybox..." ; \
-    busybox --install ; \
-    echo "Build complete."
+    # install busybox
+    busybox --install
 
 
 #======================================================================================================================
-# STAGE 4: load Alpine base image
+# STAGE 4: get overlay from Alpine image
 #======================================================================================================================
 
-FROM bfren/alpine:dev AS alpine
+FROM alpine AS alpine
+
+WORKDIR /tmp
+RUN \
+    # get the overlay from the Alpine base image
+    echo "Cloning Alpine overlay." && \
+    apk add git && git clone --branch v2.0.0 https://github.com/bfren/docker-alpine.git && \
+    mv docker-alpine/overlay /
 
 
 #======================================================================================================================
@@ -86,23 +95,30 @@ FROM bfren/alpine:dev AS alpine
 
 FROM debian:12.2-slim as install
 COPY --from=build /log /etc/bf/BUILD
-COPY --from=alpine /init /init
-COPY --from=alpine /etc/nu/ /etc/nu/
-COPY --from=alpine /usr/bin/bf/ /usr/bin/bf/
+COPY --from=alpine /overlay /
 COPY --from=busybox / /
 COPY --from=nushell / /
 
 ARG BF_IMAGE
 ARG BF_VERSION
 
-ENV BF_ETC=/etc/bf \
-    BF_UPGRADE_PACKAGES=0 \
-    NUSHELL_VERSION=0.86.0
-
 COPY ./overlay /
 
-RUN chmod +x /preinstall && /preinstall
-RUN /usr/bin/bf/bf-install
+ENV \
+    # path to bf configuration
+    BF_ETC=/etc/bf \
+    # whether or not to upgrade packages during installation
+    #   0: no
+    #   1: yes
+    BF_UPGRADE_PACKAGES=0 \
+    # Nushell version string to check against installed verion after installation
+    NUSHELL_VERSION=0.86.0
+
+RUN \
+    # setup Nushell using preinstallation script
+    chmod +x /preinstall && /preinstall && \
+    # use standard bf installation executable
+    /usr/bin/bf/bf-install
 
 
 #======================================================================================================================
