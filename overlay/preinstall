@@ -1,61 +1,49 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 set -euo pipefail
-export BF_E=`basename ${0}`
 
 
 #======================================================================================================================
-# Disable interactive frontend and terminal.
+# Move Nushell config
 #======================================================================================================================
 
-export DEBIAN_FRONTEND=noninteractive
-export TERM=dumb
-
-
-#======================================================================================================================
-# Set permissions.
-#======================================================================================================================
-
-chmod +x /usr/bin/esh
-chmod +x ${BF_BIN}/*
-
-bf-ch -o root:root -m 1777 /etc/bf/src
-bf-ch -o root:root -r /etc/bf/templates && \
-    bf-ch -m 0444 -t f /etc/bf/templates && \
-    bf-ch -m 0555 -t d /etc/bf/templates
-bf-ch -o root:root -m 1777 /tmp
-bf-ch -o root:root -m 0555 -t f /usr/lib/bf
+NU=/etc/nu
+CFG=/root/.config/nushell
+mv ${CFG}/config.nu ${NU}
+mv ${CFG}/env.nu ${NU}
 
 
 #======================================================================================================================
-# Run install script in /tmp.
+# Link Nushell scripts directory
 #======================================================================================================================
 
-INSTALL=/tmp/install
-[[ ! -f ${INSTALL} ]] && bf-error "${INSTALL} does not exist."
-
-chmod +x ${INSTALL} && ${INSTALL}
-bf-done
+ln ${NU}/config.nu ${CFG}/config.nu
+ln ${NU}/env.nu ${CFG}/env.nu
+ln -s ${NU}/scripts ${CFG}/scripts
 
 
 #======================================================================================================================
-# Store Debian version.
+# Delete Nushell plugins
 #======================================================================================================================
 
-echo "${DEBIAN_MINOR}" > /BF_DEBIAN
-
-
-#======================================================================================================================
-# Store image version.
-#======================================================================================================================
-
-echo "${BF_IMAGE/docker-/}" > /BF_IMAGE
-echo "${BF_VERSION}" > /BF_VERSION
-bf-image
+rm -rf ${CFG}/plugins
 
 
 #======================================================================================================================
-# Perform cleanup.
+# Set permissions
 #======================================================================================================================
 
-bf-clear
+echo "Setting bf-install permissions."
+chmod 0500 /usr/bin/bf/bf-install
+
+
+#======================================================================================================================
+# Test Nushell version
+#======================================================================================================================
+
+echo "Testing Nushell version."
+INSTALLED_VERSION=$(nu -v 2> /dev/null)
+if [ "${INSTALLED_VERSION}" != "${NUSHELL_VERSION}" ] ; then
+    echo "Detected Nushell version '${INSTALLED_VERSION}' - expecting '${NUSHELL_VERSION}'."
+    exit 1
+fi
