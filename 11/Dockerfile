@@ -21,8 +21,10 @@ RUN case "${TARGETPLATFORM}" in \
     esac && \
     NAME=nu-0.86.0-${ARCH}-unknown-linux-${COMP} && \
     URL=https://github.com/nushell/nushell/releases/download/0.86.0/${NAME}.tar.gz && \
+    echo "Downloading ${URL}..." && \
     wget ${URL} && \
     tar -oxzf ${NAME}.tar.gz && \
+    echo "Moving files to /nu folders..." && \
     mkdir /nu && \
     mv ${NAME}/nu /nu && \
     mkdir /nu-config && \
