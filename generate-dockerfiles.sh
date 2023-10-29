@@ -6,8 +6,8 @@ docker pull bfren/alpine
 
 BUSYBOX_VERSION="1.36.1"
 echo "Busybox: ${BUSYBOX_VERSION}"
-
-DEBIAN_VERSIONS="10 11 12 13"
+NUSHELL_VERSION="0.86.0"
+DEBIAN_VERSIONS="11 12 13"
 for V in ${DEBIAN_VERSIONS} ; do
 
     echo "Debian ${V}"
@@ -25,8 +25,12 @@ for V in ${DEBIAN_VERSIONS} ; do
         bfren/alpine esh \
         "/ws/Dockerfile.esh" \
         BUSYBOX_IMAGE=${BUSYBOX_IMAGE} \
-        DEBIAN_VERSION=${V} \
-        DEBIAN_MINOR=${DEBIAN_MINOR}
+        BUSYBOX_VERSION=${BUSYBOX_VERSION} \
+        DEBIAN_MAJOR=${V} \
+        DEBIAN_MINOR=${DEBIAN_MINOR} \
+        BF_BIN=/usr/bin/bf \
+        BF_ETC=/etc/bf \
+        NUSHELL_VERSION=${NUSHELL_VERSION}
     )
 
     echo "${DOCKERFILE}" > ./${V}/Dockerfile
