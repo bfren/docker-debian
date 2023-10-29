@@ -15,7 +15,7 @@ RUN \
 WORKDIR /tmp
 RUN case "${TARGETPLATFORM}" in \
         linux/amd64) ARCH="x86_64" ; COMP="gnu" ;; \
-        linux/arm/v7) ARCH="armhf" ; COMP="gnueabihf" ;; \
+        linux/arm/v7) ARCH="armv7" ; COMP="gnueabihf" ;; \
         linux/arm64) ARCH="aarch64" ; COMP="gnu" ;; \
         *) echo "Unsupported target platform: ${TARGETPLATFORM}." && exit 1 ;; \
     esac && \
