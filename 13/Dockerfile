@@ -117,7 +117,7 @@ ENV \
 RUN \
     # setup Nushell using preinstallation script
     chmod +x /preinstall && /preinstall && \
-    # use standard bf installation executable
+    # run standard bf installation executable
     /usr/bin/bf/bf-install
 
 
