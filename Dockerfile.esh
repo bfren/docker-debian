@@ -67,7 +67,7 @@ RUN \
     X=$(busybox --list-full) ; \
     IGNORE="[ [[ addgroup adduser cmp dpkg dpkg-deb df find grep logger mkdir setarch" ; \
     for A in ${X} ; do \
-    if busybox printf "%s\0" "${IGNORE}" | busybox grep -q `busybox basename ${A}` ; then continue ; \
+    if busybox printf "%s\0" "${IGNORE}" | busybox grep -q -F `busybox basename ${A}` ; then continue ; \
     else busybox rm -f /${A} ; \
     fi ; \
     done ; \
