@@ -12,4 +12,4 @@ docker buildx build \
     -t debian${DEBIAN}-dev \
     . \
     && \
-    docker run -it debian${DEBIAN}-dev sh
+    docker run -it -e BF_DEBUG=1 debian${DEBIAN}-dev sh
