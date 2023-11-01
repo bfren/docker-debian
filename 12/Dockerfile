@@ -128,7 +128,7 @@ RUN \
 FROM scratch as final
 COPY --from=install / /
 
-LABEL org.opencontainers.image.description="Debian base image with Busybox and Nushell."
+LABEL org.opencontainers.image.description="Debian Linux with default Busybox and Nushell installed."
 LABEL org.opencontainers.image.source="https://github.com/bfren/docker-debian"
 
 ENV \
