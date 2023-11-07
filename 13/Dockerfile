@@ -105,8 +105,10 @@ ARG BF_VERSION
 COPY ./overlay /
 
 ENV \
-    # path to bf configuration
+    # path to bf configuration - installation script requires this
     BF_ETC=/etc/bf \
+    # set container to this timezone
+    BF_TZ=Europe/London \
     # whether or not to upgrade packages during installation
     #   0: no
     #   1: yes
