@@ -37,3 +37,6 @@ export def main [
     # return nothing
     return
 }
+
+# Return the name of the current timezone
+export def current [] { fs read $timezone }
