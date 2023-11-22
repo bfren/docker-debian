@@ -5,9 +5,10 @@ set -euo pipefail
 docker pull bfren/alpine
 
 BUSYBOX_VERSION="1.36.1"
-echo "Busybox: ${BUSYBOX_VERSION}"
+NUSHELL_VERSION="0.87.0"
+ALPINE_BRANCH="v2.0.0"
+DEBIAN_VERSIONS="11 12 13"
 
-DEBIAN_VERSIONS="10 11 12 13"
 for V in ${DEBIAN_VERSIONS} ; do
 
     echo "Debian ${V}"
@@ -24,9 +25,14 @@ for V in ${DEBIAN_VERSIONS} ; do
         -e BF_DEBUG=0 \
         bfren/alpine esh \
         "/ws/Dockerfile.esh" \
+        ALPINE_BRANCH=${ALPINE_BRANCH} \
         BUSYBOX_IMAGE=${BUSYBOX_IMAGE} \
-        DEBIAN_VERSION=${V} \
-        DEBIAN_MINOR=${DEBIAN_MINOR}
+        BUSYBOX_VERSION=${BUSYBOX_VERSION} \
+        DEBIAN_MAJOR=${V} \
+        DEBIAN_MINOR=${DEBIAN_MINOR} \
+        BF_BIN=/usr/bin/bf \
+        BF_ETC=/etc/bf \
+        NUSHELL_VERSION=${NUSHELL_VERSION}
     )
 
     echo "${DOCKERFILE}" > ./${V}/Dockerfile

@@ -1,33 +1,22 @@
-#!/bin/bash
+#!/usr/bin/nu
 
-set -euo pipefail
-export BF_E=`basename ${0}`
+use bf
 
+def main [] {
+    # upgrade to current versions of packages
+    if (bf env check UPGRADE_PACKAGES) {
+        bf write "Upgrading packages."
+        bf pkg upgrade
+    }
 
-#======================================================================================================================
-# Add additional packages.
-#======================================================================================================================
+    # install additional packages
+    try {
+        bf write "Installing additional packages."
+        bf pkg install [figlet]
+    } catch {
+        bf write error "Unable to install additional packages."
+    }
 
-bf-echo "Adding additional packages..."
-apt update && apt install -y \
-    ca-certificates \
-    figlet \
-    openssl
-bf-done
-
-
-#======================================================================================================================
-# Set timezone.
-#======================================================================================================================
-
-bf-tz "Europe/London"
-
-
-#======================================================================================================================
-# Cleanup.
-#======================================================================================================================
-
-bf-echo "Cleaning up caches and unnecessary directories..."
-bf-rmrf /var/lib/apt/lists/*
-bf-rmrf /usr/share/man
-bf-done
+    # set timezone
+    bf tz (bf env TZ)
+}
