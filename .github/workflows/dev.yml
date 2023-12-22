@@ -75,6 +75,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
+        name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      -
         name: Build and push
         id: docker_build
         uses: docker/build-push-action@v5
@@ -95,6 +102,14 @@ jobs:
             bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version_major.outputs.contents }}-dev
             bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version_minor.outputs.contents }}-dev
             bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version.outputs.contents }}-dev
+            ghcr.io/bfren/debian:debian${{ matrix.debian }}-dev
+            ghcr.io/bfren/debian:debian${{ matrix.debian }}-${{ steps.version_major.outputs.contents }}-dev
+            ghcr.io/bfren/debian:debian${{ matrix.debian }}-${{ steps.version_minor.outputs.contents }}-dev
+            ghcr.io/bfren/debian:debian${{ matrix.debian }}-${{ steps.version.outputs.contents }}-dev
+            ghcr.io/bfren/debian:${{ steps.debian_name.outputs.contents }}-dev
+            ghcr.io/bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version_major.outputs.contents }}-dev
+            ghcr.io/bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version_minor.outputs.contents }}-dev
+            ghcr.io/bfren/debian:${{ steps.debian_name.outputs.contents }}-${{ steps.version.outputs.contents }}-dev
       -
         name: Build and push default tags
         id: docker_build_default
@@ -113,6 +128,10 @@ jobs:
             bfren/debian:${{ steps.version_major.outputs.contents }}-dev
             bfren/debian:${{ steps.version_minor.outputs.contents }}-dev
             bfren/debian:${{ steps.version.outputs.contents }}-dev
+            ghcr.io/bfren/debian:dev
+            ghcr.io/bfren/debian:${{ steps.version_major.outputs.contents }}-dev
+            ghcr.io/bfren/debian:${{ steps.version_minor.outputs.contents }}-dev
+            ghcr.io/bfren/debian:${{ steps.version.outputs.contents }}-dev
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
