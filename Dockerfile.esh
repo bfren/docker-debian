@@ -103,6 +103,7 @@ ARG BF_IMAGE
 ARG BF_VERSION
 
 COPY ./overlay /
+ADD https://github.com/nushell/nupm.git /tmp
 
 ENV \
     # path to bf configuration - installation script requires this
