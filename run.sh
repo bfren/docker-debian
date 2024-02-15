@@ -5,7 +5,6 @@ DEBIAN=${1:-12}
 
 docker buildx build \
     --load \
-    --progress plain \
     --build-arg BF_IMAGE=debian \
     --build-arg BF_VERSION=${IMAGE} \
     -f ${DEBIAN}/Dockerfile \
