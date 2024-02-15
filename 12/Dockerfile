@@ -8,7 +8,7 @@ ARG TARGETPLATFORM
 RUN \
     # save platform and version information to log
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
-    echo "Debian: 12.4" >> /log && \
+    echo "Debian: 12.5" >> /log && \
     echo "Busybox: 1.36.1" >> /log && \
     echo "Nushell: 0.90.1" >> /log
 
@@ -51,14 +51,14 @@ COPY --from=build /nu-plugins/ /root/.config/nushell/plugins/
 # STAGE 2: load busybox
 #======================================================================================================================
 
-FROM ghcr.io/bfren/busybox:1.36.1-debian12.4 AS busybox-executable
+FROM ghcr.io/bfren/busybox:1.36.1-debian12.5 AS busybox-executable
 
 
 #======================================================================================================================
 # STAGE 3: install busybox
 #======================================================================================================================
 
-FROM debian:12.4-slim AS busybox
+FROM debian:12.5-slim AS busybox
 COPY --from=busybox-executable / /bin
 
 RUN \
@@ -93,17 +93,17 @@ RUN \
 # STAGE 5: install bfren platform
 #======================================================================================================================
 
-FROM debian:12.4-slim as install
+FROM debian:12.5-slim as install
 COPY --from=build /log /etc/bf/BUILD
 COPY --from=alpine /overlay /
 COPY --from=busybox / /
 COPY --from=nushell / /
 
 ARG BF_IMAGE
+ARG BF_PUBLISHING
 ARG BF_VERSION
 
 COPY ./overlay /
-ADD https://github.com/nushell/nupm.git /tmp
 
 ENV \
     # path to bf configuration - installation script requires this

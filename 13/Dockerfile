@@ -100,10 +100,10 @@ COPY --from=busybox / /
 COPY --from=nushell / /
 
 ARG BF_IMAGE
+ARG BF_PUBLISHING
 ARG BF_VERSION
 
 COPY ./overlay /
-ADD https://github.com/nushell/nupm.git /tmp
 
 ENV \
     # path to bf configuration - installation script requires this
