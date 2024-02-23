@@ -1,6 +1,6 @@
 #!/bin/sh
 
-IMAGE=alpine
+IMAGE=debian
 VERSION=`cat VERSION`
 DEBIAN=${1:-12}
 TAG=${IMAGE}-test
