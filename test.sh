@@ -1,25 +1,16 @@
-#!/bin/bash
+#!/bin/sh
 
-set -euo pipefail
+IMAGE=debian
+VERSION=`cat VERSION`
+DEBIAN=${1:-12}
+TAG=${IMAGE}-test
 
-DEBIAN_EDITIONS="11 12 13"
-for E in ${DEBIAN_EDITIONS} ; do
-
-    echo "Building Debian ${E}."
-    docker buildx build \
-        --load \
-        --quiet \
-        --build-arg BF_IMAGE=debian \
-        --build-arg BF_VERSION=0.1.0 \
-        -f ${E}/Dockerfile \
-        -t debian${E}-test \
-        .
-
-    echo "Running tests."
-    docker run \
-        -e BF_TESTING=1 \
-        debian${E}-test env -i nu -c "use bf test ; test"
-
-    echo ""
-
-done
+docker buildx build \
+    --load \
+    --build-arg BF_IMAGE=${IMAGE} \
+    --build-arg BF_VERSION=${VERSION} \
+    -f ${DEBIAN}/Dockerfile \
+    -t ${TAG} \
+    . \
+    && \
+    docker run --entrypoint "/usr/bin/env" ${TAG} -i nu -c "use bf test ; test"

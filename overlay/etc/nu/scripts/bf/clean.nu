@@ -16,8 +16,6 @@ export def main [] {
 
     if (env check PUBLISHING) {
         write debug "Deleting test files." clean
-        del force /etc/nu/scripts/nupm
         del force /etc/nu/scripts/tests
-        del force /etc/nu/scripts/nupm.nuon
     }
 }

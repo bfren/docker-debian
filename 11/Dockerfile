@@ -8,9 +8,9 @@ ARG TARGETPLATFORM
 RUN \
     # save platform and version information to log
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
-    echo "Debian: 11.8" >> /log && \
+    echo "Debian: 11.9" >> /log && \
     echo "Busybox: 1.36.1" >> /log && \
-    echo "Nushell: 0.89.0" >> /log
+    echo "Nushell: 0.90.1" >> /log
 
 WORKDIR /tmp
 RUN \
@@ -22,8 +22,8 @@ RUN \
         linux/arm64) ARCH="aarch64" ; COMP="gnu" ;; \
         *) echo "Unsupported target platform: ${TARGETPLATFORM}." && exit 1 ;; \
     esac && \
-    NAME=nu-0.89.0-${ARCH}-unknown-linux-${COMP} && \
-    URL=https://github.com/nushell/nushell/releases/download/0.89.0/${NAME}.tar.gz && \
+    NAME=nu-0.90.1-${ARCH}-unknown-linux-${COMP} && \
+    URL=https://github.com/nushell/nushell/releases/download/0.90.1/${NAME}.tar.gz && \
     wget ${URL} && \
     tar -oxzf ${NAME}.tar.gz && \
     mkdir /nu && \
@@ -33,8 +33,8 @@ RUN \
     mkdir /nu-plugins && \
     mv ${NAME}/nu_plugin* /nu-plugins
 
-ADD https://raw.githubusercontent.com/bfren/nushell/main/0.89.0/config.nu /nu-config/config.nu
-ADD https://raw.githubusercontent.com/bfren/nushell/main/0.89.0/env.nu /nu-config/env.nu
+ADD https://raw.githubusercontent.com/bfren/nushell/main/0.90.1/config.nu /nu-config/config.nu
+ADD https://raw.githubusercontent.com/bfren/nushell/main/0.90.1/env.nu /nu-config/env.nu
 
 
 #======================================================================================================================
@@ -51,14 +51,14 @@ COPY --from=build /nu-plugins/ /root/.config/nushell/plugins/
 # STAGE 2: load busybox
 #======================================================================================================================
 
-FROM ghcr.io/bfren/busybox:1.36.1-debian11.8 AS busybox-executable
+FROM ghcr.io/bfren/busybox:1.36.1-debian11.9 AS busybox-executable
 
 
 #======================================================================================================================
 # STAGE 3: install busybox
 #======================================================================================================================
 
-FROM debian:11.8-slim AS busybox
+FROM debian:11.9-slim AS busybox
 COPY --from=busybox-executable / /bin
 
 RUN \
@@ -85,7 +85,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v2.1.4 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v2.2.3 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
@@ -93,17 +93,17 @@ RUN \
 # STAGE 5: install bfren platform
 #======================================================================================================================
 
-FROM debian:11.8-slim as install
+FROM debian:11.9-slim as install
 COPY --from=build /log /etc/bf/BUILD
 COPY --from=alpine /overlay /
 COPY --from=busybox / /
 COPY --from=nushell / /
 
 ARG BF_IMAGE
+ARG BF_PUBLISHING
 ARG BF_VERSION
 
 COPY ./overlay /
-ADD https://github.com/nushell/nupm.git /tmp
 
 ENV \
     # path to bf configuration - installation script requires this
@@ -115,7 +115,7 @@ ENV \
     #   1: yes
     BF_UPGRADE_PACKAGES=0 \
     # Nushell version string to check against installed verion after installation
-    NUSHELL_VERSION=0.89.0
+    NUSHELL_VERSION=0.90.1
 
 RUN \
     # setup Nushell using preinstallation script
