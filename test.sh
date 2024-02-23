@@ -1,14 +1,16 @@
 #!/bin/sh
 
-IMAGE=`cat VERSION`
+IMAGE=alpine
+VERSION=`cat VERSION`
 DEBIAN=${1:-12}
+TAG=${IMAGE}-test
 
 docker buildx build \
     --load \
-    --build-arg BF_IMAGE=debian \
-    --build-arg BF_VERSION=${IMAGE} \
+    --build-arg BF_IMAGE=${IMAGE} \
+    --build-arg BF_VERSION=${VERSION} \
     -f ${DEBIAN}/Dockerfile \
-    -t debian${DEBIAN}-test \
+    -t ${TAG} \
     . \
     && \
-    docker run --rm debian${DEBIAN}-test env -i nu -c "use bf test ; test"
+    docker run --entrypoint "/usr/bin/env" ${TAG} -i nu -c "use bf test ; test"
