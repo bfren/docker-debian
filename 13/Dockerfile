@@ -10,7 +10,7 @@ RUN \
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
     echo "Debian: trixie" >> /log && \
     echo "Busybox: 1.36.1" >> /log && \
-    echo "Nushell: 0.93.0" >> /log
+    echo "Nushell: 0.94.2" >> /log
 
 WORKDIR /tmp
 RUN \
@@ -22,8 +22,8 @@ RUN \
         linux/arm64) ARCH="aarch64" ; COMP="gnu" ;; \
         *) echo "Unsupported target platform: ${TARGETPLATFORM}." && exit 1 ;; \
     esac && \
-    NAME=nu-0.93.0-${ARCH}-unknown-linux-${COMP} && \
-    URL=https://github.com/nushell/nushell/releases/download/0.93.0/${NAME}.tar.gz && \
+    NAME=nu-0.94.2-${ARCH}-unknown-linux-${COMP} && \
+    URL=https://github.com/nushell/nushell/releases/download/0.94.2/${NAME}.tar.gz && \
     wget ${URL} && \
     tar -oxzf ${NAME}.tar.gz && \
     mkdir /nu && \
@@ -33,8 +33,8 @@ RUN \
     mkdir /nu-plugins && \
     mv ${NAME}/nu_plugin* /nu-plugins
 
-ADD https://raw.githubusercontent.com/bfren/nushell/main/0.93.0/config.nu /nu-config/config.nu
-ADD https://raw.githubusercontent.com/bfren/nushell/main/0.93.0/env.nu /nu-config/env.nu
+ADD https://raw.githubusercontent.com/bfren/nushell/main/0.94.2/config.nu /nu-config/config.nu
+ADD https://raw.githubusercontent.com/bfren/nushell/main/0.94.2/env.nu /nu-config/env.nu
 
 
 #======================================================================================================================
@@ -85,7 +85,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v2.3.0 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v2.3.1 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
@@ -115,7 +115,7 @@ ENV \
     #   1: yes
     BF_UPGRADE_PACKAGES=0 \
     # Nushell version string to check against installed verion after installation
-    NUSHELL_VERSION=0.93.0
+    NUSHELL_VERSION=0.94.2
 
 RUN \
     # setup Nushell using preinstallation script
