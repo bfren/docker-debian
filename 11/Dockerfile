@@ -92,7 +92,7 @@ ENV \
 
 RUN \
     # add packages required by Nushell
-    apt update && apt install --no-install-recommends -y libgit2-dev openssl sqlite3 && \
+    apt update && apt install --no-install-recommends -y ca-certificates libgit2-dev openssl sqlite3 && \
     # setup Nushell using preinstallation script
     chmod +x /preinstall && /preinstall && \
     # run standard bf installation executable
