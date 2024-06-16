@@ -24,32 +24,11 @@ FROM ghcr.io/bfren/nushell:0.94.2-debian as nushell
 # STAGE 2: load busybox
 #======================================================================================================================
 
-FROM ghcr.io/bfren/busybox:1.36.1-debiantrixie AS busybox-executable
+FROM ghcr.io/bfren/busybox:1.36.1-debiantrixie AS busybox
 
 
 #======================================================================================================================
-# STAGE 3: install busybox
-#======================================================================================================================
-
-FROM debian:trixie-slim AS busybox
-COPY --from=busybox-executable / /bin
-
-RUN \
-    # delete all binaries that will be replaced by busybox - those in ${IGNORE} will be left alone
-    echo "Installing busybox." && \
-    X=$(busybox --list-full) ; \
-    IGNORE="[ [[ addgroup adduser cmp dpkg dpkg-deb df find grep logger mkdir setarch" ; \
-    for A in ${X} ; do \
-    if busybox printf "%s\0" "${IGNORE}" | busybox grep -q -F `busybox basename ${A}` ; then continue ; \
-    else busybox rm -f /${A} ; \
-    fi ; \
-    done ; \
-    # install busybox
-    busybox --install
-
-
-#======================================================================================================================
-# STAGE 4: get overlay from Alpine image
+# STAGE 3: get overlay from Alpine image
 #======================================================================================================================
 
 FROM alpine AS alpine
@@ -63,13 +42,13 @@ RUN \
 
 
 #======================================================================================================================
-# STAGE 5: install bfren platform
+# STAGE 4: install bfren platform
 #======================================================================================================================
 
 FROM debian:trixie-slim as install
 COPY --from=build /log /etc/bf/BUILD
 COPY --from=alpine /overlay /
-COPY --from=busybox / /
+COPY --from=busybox / /bin
 COPY --from=nushell / /
 
 ARG BF_IMAGE
@@ -91,6 +70,17 @@ ENV \
     NUSHELL_VERSION=0.94.2
 
 RUN \
+    # delete all binaries that will be replaced by busybox - those in ${IGNORE} will be left alone
+    echo "Installing busybox." && \
+    X=$(busybox --list-full) ; \
+    IGNORE="[ [[ addgroup adduser cmp dpkg dpkg-deb df find grep logger mkdir setarch" ; \
+    for A in ${X} ; do \
+    if busybox printf "%s\0" "${IGNORE}" | busybox grep -q -F `busybox basename ${A}` ; then continue ; \
+    else busybox rm -f /${A} ; \
+    fi ; \
+    done ; \
+    # install busybox
+    busybox --install && \
     # add packages required by Nushell
     apt update && apt install --no-install-recommends -y ca-certificates libgit2-dev openssl sqlite3 && \
     # setup Nushell using preinstallation script
@@ -100,7 +90,7 @@ RUN \
 
 
 #======================================================================================================================
-# STAGE 6: create final image
+# STAGE 5: create final image
 #======================================================================================================================
 
 FROM scratch as final
