@@ -12,39 +12,12 @@ RUN \
     echo "Busybox: 1.36.1" >> /log && \
     echo "Nushell: 0.94.2" >> /log
 
-WORKDIR /tmp
-RUN \
-    # build a URL to download and extract Nushell binaries from a release
-    echo "Installing Nushell." && \
-    case "${TARGETPLATFORM}" in \
-        linux/amd64) ARCH="x86_64" ; COMP="gnu" ;; \
-        linux/arm/v7) ARCH="armv7" ; COMP="gnueabihf" ;; \
-        linux/arm64) ARCH="aarch64" ; COMP="gnu" ;; \
-        *) echo "Unsupported target platform: ${TARGETPLATFORM}." && exit 1 ;; \
-    esac && \
-    NAME=nu-0.94.2-${ARCH}-unknown-linux-${COMP} && \
-    URL=https://github.com/nushell/nushell/releases/download/0.94.2/${NAME}.tar.gz && \
-    wget ${URL} && \
-    tar -oxzf ${NAME}.tar.gz && \
-    mkdir /nu && \
-    mv ${NAME}/nu /nu && \
-    mkdir /nu-config && \
-    mv ${NAME}/LICENSE ${NAME}/README.txt /nu-config && \
-    mkdir /nu-plugins && \
-    mv ${NAME}/nu_plugin* /nu-plugins
-
-ADD https://raw.githubusercontent.com/bfren/nushell/main/0.94.2/config.nu /nu-config/config.nu
-ADD https://raw.githubusercontent.com/bfren/nushell/main/0.94.2/env.nu /nu-config/env.nu
-
 
 #======================================================================================================================
-# STAGE 1: move Nushell files into their correct locations
+# STAGE 1: load Nushell
 #======================================================================================================================
 
-FROM scratch as nushell
-COPY --from=build /nu/ /usr/bin/
-COPY --from=build /nu-config/ /root/.config/nushell/
-COPY --from=build /nu-plugins/ /root/.config/nushell/plugins/
+FROM ghcr.io/bfren/nushell:0.94.2-debian as nushell
 
 
 #======================================================================================================================
@@ -85,7 +58,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v2.3.1 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v2.3.2 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
