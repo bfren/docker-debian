@@ -58,7 +58,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v2.3.2 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v2.4.0 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
@@ -91,6 +91,8 @@ ENV \
     NUSHELL_VERSION=0.94.2
 
 RUN \
+    # add packages required by Nushell
+    apt update && apt install --no-install-recommends -y libgit2-dev openssl sqlite3 && \
     # setup Nushell using preinstallation script
     chmod +x /preinstall && /preinstall && \
     # run standard bf installation executable
