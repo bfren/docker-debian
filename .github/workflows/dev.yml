@@ -94,7 +94,7 @@ jobs:
             BF_IMAGE=${{ env.REPOSITORY_NAME }}
             BF_VERSION=${{ steps.version.outputs.contents }}
           push: ${{ startsWith(github.ref, 'refs/heads/') }}
-          platforms: linux/amd64,linux/arm64/v8
+          platforms: linux/amd64,linux/arm/v7/linux/arm64/v8
           tags: |
             bfren/debian:debian${{ matrix.debian }}-dev
             bfren/debian:debian${{ matrix.debian }}-${{ steps.version_major.outputs.contents }}-dev
@@ -124,7 +124,7 @@ jobs:
             BF_IMAGE=${{ env.REPOSITORY_NAME }}
             BF_VERSION=${{ steps.version.outputs.contents }}
           push: ${{ startsWith(github.ref, 'refs/heads/') }}
-          platforms: linux/amd64,linux/arm64/v8
+          platforms: linux/amd64,linux/arm/v7/linux/arm64/v8
           tags: |
             bfren/debian:dev
             bfren/debian:${{ steps.version_major.outputs.contents }}-dev
