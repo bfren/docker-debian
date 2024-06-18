@@ -81,6 +81,8 @@ RUN \
     done ; \
     # install busybox
     busybox --install && \
+    # reset /tmp permissions
+    chmod 1777 /tmp && \
     # add packages required by Nushell
     apt update && apt install --no-install-recommends -y libgit2-dev openssl sqlite3 && \
     # setup Nushell using preinstallation script
