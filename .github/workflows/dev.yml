@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        debian: [ "11", "12", "13" ]
+        debian: [ "11", "12" ]
     runs-on: ubuntu-latest
     steps:
       -
