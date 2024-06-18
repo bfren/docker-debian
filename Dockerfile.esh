@@ -12,71 +12,23 @@ RUN \
     echo "Busybox: <%= ${BUSYBOX_VERSION} %>" >> /log && \
     echo "Nushell: <%= ${NUSHELL_VERSION} %>" >> /log
 
-WORKDIR /tmp
-RUN \
-    # build a URL to download and extract Nushell binaries from a release
-    echo "Installing Nushell." && \
-    case "${TARGETPLATFORM}" in \
-        linux/amd64) ARCH="x86_64" ; COMP="gnu" ;; \
-        linux/arm/v7) ARCH="armv7" ; COMP="gnueabihf" ;; \
-        linux/arm64) ARCH="aarch64" ; COMP="gnu" ;; \
-        *) echo "Unsupported target platform: ${TARGETPLATFORM}." && exit 1 ;; \
-    esac && \
-    NAME=nu-<%= ${NUSHELL_VERSION} %>-${ARCH}-unknown-linux-${COMP} && \
-    URL=https://github.com/nushell/nushell/releases/download/<%= ${NUSHELL_VERSION} %>/${NAME}.tar.gz && \
-    wget ${URL} && \
-    tar -oxzf ${NAME}.tar.gz && \
-    mkdir /nu && \
-    mv ${NAME}/nu /nu && \
-    mkdir /nu-config && \
-    mv ${NAME}/LICENSE ${NAME}/README.txt /nu-config && \
-    mkdir /nu-plugins && \
-    mv ${NAME}/nu_plugin* /nu-plugins
-
-ADD https://raw.githubusercontent.com/bfren/nushell/main/<%= ${NUSHELL_VERSION} %>/config.nu /nu-config/config.nu
-ADD https://raw.githubusercontent.com/bfren/nushell/main/<%= ${NUSHELL_VERSION} %>/env.nu /nu-config/env.nu
-
 
 #======================================================================================================================
-# STAGE 1: move Nushell files into their correct locations
+# STAGE 1: load Nushell
 #======================================================================================================================
 
-FROM scratch as nushell
-COPY --from=build /nu/ /usr/bin/
-COPY --from=build /nu-config/ /root/.config/nushell/
-COPY --from=build /nu-plugins/ /root/.config/nushell/plugins/
+FROM ghcr.io/bfren/nushell:<%= ${NUSHELL_VERSION} %>-<%= ${DEBIAN_NAME} %> as nushell
 
 
 #======================================================================================================================
 # STAGE 2: load busybox
 #======================================================================================================================
 
-FROM ghcr.io/bfren/busybox:<%= ${BUSYBOX_IMAGE} %> AS busybox-executable
+FROM ghcr.io/bfren/busybox:<%= ${BUSYBOX_IMAGE} %> AS busybox
 
 
 #======================================================================================================================
-# STAGE 3: install busybox
-#======================================================================================================================
-
-FROM debian:<%= ${DEBIAN_MINOR} %>-slim AS busybox
-COPY --from=busybox-executable / /bin
-
-RUN \
-    # delete all binaries that will be replaced by busybox - those in ${IGNORE} will be left alone
-    echo "Installing busybox." && \
-    X=$(busybox --list-full) ; \
-    IGNORE="[ [[ addgroup adduser cmp dpkg dpkg-deb df find grep logger mkdir setarch" ; \
-    for A in ${X} ; do \
-    if busybox printf "%s\0" "${IGNORE}" | busybox grep -q -F `busybox basename ${A}` ; then continue ; \
-    else busybox rm -f /${A} ; \
-    fi ; \
-    done ; \
-    # install busybox
-    busybox --install
-
-
-#======================================================================================================================
-# STAGE 4: get overlay from Alpine image
+# STAGE 3: get overlay from Alpine image
 #======================================================================================================================
 
 FROM alpine AS alpine
@@ -90,13 +42,13 @@ RUN \
 
 
 #======================================================================================================================
-# STAGE 5: install bfren platform
+# STAGE 4: install bfren platform
 #======================================================================================================================
 
 FROM debian:<%= ${DEBIAN_MINOR} %>-slim as install
 COPY --from=build /log /etc/bf/BUILD
 COPY --from=alpine /overlay /
-COPY --from=busybox / /
+COPY --from=busybox / /bin
 COPY --from=nushell / /
 
 ARG BF_IMAGE
@@ -118,6 +70,21 @@ ENV \
     NUSHELL_VERSION=<%= ${NUSHELL_VERSION} %>
 
 RUN \
+    # delete all binaries that will be replaced by busybox - those in ${IGNORE} will be left alone
+    echo "Installing busybox." && \
+    X=$(busybox --list-full) ; \
+    IGNORE="[ [[ addgroup adduser cmp dpkg dpkg-deb df find grep logger mkdir setarch" ; \
+    for A in ${X} ; do \
+    if busybox printf "%s\0" "${IGNORE}" | busybox grep -q -F `busybox basename ${A}` ; then continue ; \
+    else busybox rm -f /${A} ; \
+    fi ; \
+    done ; \
+    # install busybox
+    busybox --install && \
+    # reset /tmp permissions
+    chmod 1777 /tmp && \
+    # add packages required by Nushell
+    apt update && apt install --no-install-recommends -y libgit2-dev openssl sqlite3 && \
     # setup Nushell using preinstallation script
     chmod +x /preinstall && /preinstall && \
     # run standard bf installation executable
@@ -125,7 +92,7 @@ RUN \
 
 
 #======================================================================================================================
-# STAGE 6: create final image
+# STAGE 5: create final image
 #======================================================================================================================
 
 FROM scratch as final

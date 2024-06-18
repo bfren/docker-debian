@@ -4,15 +4,16 @@ set -euo pipefail
 
 docker pull bfren/alpine
 
-ALPINE_BRANCH="v2.3.0"
+ALPINE_BRANCH="v2.4.1"
 BUSYBOX_VERSION="1.36.1"
-NUSHELL_VERSION="0.93.0"
-DEBIAN_VERSIONS="11 12 13"
+NUSHELL_VERSION="0.94.2"
+DEBIAN_VERSIONS="11 12"
 
 for V in ${DEBIAN_VERSIONS} ; do
 
     echo "Debian ${V}"
     DEBIAN_MINOR=`cat ./${V}/DEBIAN_MINOR`
+    DEBIAN_NAME=`cat ./${V}/DEBIAN_NAME`
 
     if [ "${DEBIAN_MINOR}" = "12.0" ] ; then
         BUSYBOX_IMAGE="${BUSYBOX_VERSION}-debian12"
@@ -30,6 +31,7 @@ for V in ${DEBIAN_VERSIONS} ; do
         BUSYBOX_VERSION=${BUSYBOX_VERSION} \
         DEBIAN_MAJOR=${V} \
         DEBIAN_MINOR=${DEBIAN_MINOR} \
+        DEBIAN_NAME=${DEBIAN_NAME} \
         BF_BIN=/usr/bin/bf \
         BF_ETC=/etc/bf \
         NUSHELL_VERSION=${NUSHELL_VERSION}

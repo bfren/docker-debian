@@ -15,7 +15,7 @@ const zoneinfo = "/usr/share/zoneinfo"
 # Set the container's timezone
 export def main [
     tz: string  # The name of the timezone to use
-] {
+]: nothing -> nothing {
     # if current timezone is already $tz, do nothing
     let current = fs read --quiet $timezone
     if $current == $tz {
@@ -40,4 +40,4 @@ export def main [
 }
 
 # Return the name of the current timezone
-export def current [] { fs read $timezone }
+export def current []: nothing -> string { fs read $timezone }
