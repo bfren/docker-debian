@@ -17,7 +17,7 @@ RUN \
 # STAGE 1: load Nushell
 #======================================================================================================================
 
-FROM ghcr.io/bfren/nushell:0.94.2-debian as nushell
+FROM ghcr.io/bfren/nushell:0.94.2-bullseye as nushell
 
 
 #======================================================================================================================
@@ -37,7 +37,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v2.4.0 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v2.4.1 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
