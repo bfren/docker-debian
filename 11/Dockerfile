@@ -8,7 +8,7 @@ ARG TARGETPLATFORM
 RUN \
     # save platform and version information to log
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
-    echo "Debian: 11.9" >> /log && \
+    echo "Debian: 11.10" >> /log && \
     echo "Busybox: 1.36.1" >> /log && \
     echo "Nushell: 0.94.2" >> /log
 
@@ -24,7 +24,7 @@ FROM ghcr.io/bfren/nushell:0.94.2-bullseye as nushell
 # STAGE 2: load busybox
 #======================================================================================================================
 
-FROM ghcr.io/bfren/busybox:1.36.1-debian11.9 AS busybox
+FROM ghcr.io/bfren/busybox:1.36.1-debian11.10 AS busybox
 
 
 #======================================================================================================================
@@ -37,7 +37,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v2.4.1 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v2.5.1 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
@@ -45,7 +45,7 @@ RUN \
 # STAGE 4: install bfren platform
 #======================================================================================================================
 
-FROM debian:11.9-slim as install
+FROM debian:11.10-slim AS install
 COPY --from=build /log /etc/bf/BUILD
 COPY --from=alpine /overlay /
 COPY --from=busybox / /bin
@@ -95,7 +95,7 @@ RUN \
 # STAGE 5: create final image
 #======================================================================================================================
 
-FROM scratch as final
+FROM scratch AS final
 COPY --from=install / /
 
 LABEL org.opencontainers.image.description="Debian Linux with default Busybox and Nushell installed."
