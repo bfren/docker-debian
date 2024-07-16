@@ -37,7 +37,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v2.5.0 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v2.5.1 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
@@ -45,7 +45,7 @@ RUN \
 # STAGE 4: install bfren platform
 #======================================================================================================================
 
-FROM debian:12.6-slim as install
+FROM debian:12.6-slim AS install
 COPY --from=build /log /etc/bf/BUILD
 COPY --from=alpine /overlay /
 COPY --from=busybox / /bin
@@ -95,7 +95,7 @@ RUN \
 # STAGE 5: create final image
 #======================================================================================================================
 
-FROM scratch as final
+FROM scratch AS final
 COPY --from=install / /
 
 LABEL org.opencontainers.image.description="Debian Linux with default Busybox and Nushell installed."
