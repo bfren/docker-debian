@@ -31,7 +31,7 @@ FROM ghcr.io/bfren/busybox:1.36.1-debian12.6 AS busybox
 # STAGE 3: get overlay from Alpine image
 #======================================================================================================================
 
-FROM alpine AS alpine
+FROM ghcr.io/bfren/alpine AS alpine
 
 WORKDIR /tmp
 RUN \
