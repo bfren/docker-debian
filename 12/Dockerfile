@@ -10,14 +10,14 @@ RUN \
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
     echo "Debian: 12.6" >> /log && \
     echo "Busybox: 1.36.1" >> /log && \
-    echo "Nushell: 0.94.2" >> /log
+    echo "Nushell: 0.96.1" >> /log
 
 
 #======================================================================================================================
 # STAGE 1: load Nushell
 #======================================================================================================================
 
-FROM ghcr.io/bfren/nushell:0.94.2-bookworm as nushell
+FROM ghcr.io/bfren/nushell:0.96.1-bookworm as nushell
 
 
 #======================================================================================================================
@@ -67,7 +67,7 @@ ENV \
     #   1: yes
     BF_UPGRADE_PACKAGES=0 \
     # Nushell version string to check against installed verion after installation
-    NUSHELL_VERSION=0.94.2
+    NUSHELL_VERSION=0.96.1
 
 RUN \
     # delete all binaries that will be replaced by busybox - those in ${IGNORE} will be left alone
