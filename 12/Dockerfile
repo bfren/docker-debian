@@ -10,14 +10,14 @@ RUN \
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
     echo "Debian: 12.6" >> /log && \
     echo "Busybox: 1.36.1" >> /log && \
-    echo "Nushell: 0.96.1" >> /log
+    echo "Nushell: 0.97.1" >> /log
 
 
 #======================================================================================================================
 # STAGE 1: load Nushell
 #======================================================================================================================
 
-FROM ghcr.io/bfren/nushell:0.96.1-bookworm as nushell
+FROM ghcr.io/bfren/nushell:0.97.1-bookworm as nushell
 
 
 #======================================================================================================================
@@ -37,7 +37,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v2.5.8 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v2.5.9 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
@@ -67,7 +67,7 @@ ENV \
     #   1: yes
     BF_UPGRADE_PACKAGES=0 \
     # Nushell version string to check against installed verion after installation
-    NUSHELL_VERSION=0.96.1
+    NUSHELL_VERSION=0.97.1
 
 RUN \
     # delete all binaries that will be replaced by busybox - those in ${IGNORE} will be left alone
