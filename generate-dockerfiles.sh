@@ -4,7 +4,7 @@ set -euo pipefail
 
 docker pull bfren/alpine
 
-ALPINE_BRANCH="v2.5.9"
+ALPINE_BRANCH="v2.6.0"
 BUSYBOX_VERSION="1.36.1"
 BUSYBOX_BUILD="240913"
 NUSHELL_VERSION="0.97.1"
