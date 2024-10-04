@@ -31,7 +31,7 @@ export def main [
 
     # copy timezone info
     write $"Setting timezone to ($tz)." tz
-    del force $localtime
+    rm --force $localtime
     ^ln $zone $localtime
     $tz | save --force $timezone
 
