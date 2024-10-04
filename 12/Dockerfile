@@ -10,21 +10,47 @@ RUN \
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
     echo "Debian: 12.7" >> /log && \
     echo "Busybox: 1.36.1" >> /log && \
-    echo "Nushell: 0.97.1" >> /log
+    echo "Nushell: 0.98.0" >> /log
+
+WORKDIR /tmp
+RUN \
+    # build a URL to download Nushell
+    echo "Building Nushell download URL." && \
+    case "${TARGETPLATFORM}" in \
+        "linux/amd64") ARCH="x86_64" && CLIB="gnu" ;; \
+        "linux/arm/v7") ARCH="armv7" && CLIB="gnueabihf" ;; \
+        "linux/arm64") ARCH="aarch64" && CLIB="gnu" ;; \
+        *) echo "Unsupported target platform: ${TARGETPLATFORM}." && exit 1 ;; \
+    esac && \
+    RELEASES=https://github.com/nushell/nushell/releases/download/0.98.0 && \
+    FILE=nu-0.98.0-${ARCH}-unknown-linux-${CLIB} && \
+    EXT=tar.gz && \
+    URL=${RELEASES}/${FILE}.${EXT} && \
+    # build a URL to download Nushell
+    echo "Downloading Nushell from ${URL}." && \
+    wget ${URL} && \
+    # extract Nushell and move it to root
+    echo "Extracting Nushell." && \
+    tar -xf ${FILE}.${EXT} && \
+    mv ${FILE}/ /nu
 
 
 #======================================================================================================================
-# STAGE 1: load Nushell
+# STAGE 1: create blank image containing Nushell executable, plugins and config in the correct locations
 #======================================================================================================================
 
-FROM ghcr.io/bfren/nushell:0.97.1-bookworm as nushell
+FROM scratch AS nushell
+COPY --from=build /nu/nu /usr/bin/
+COPY --from=build /nu/nu_plugin* /etc/nu/plugins/
+ADD https://raw.githubusercontent.com/bfren/nushell/main/0.98.0/config.nu /etc/nu/config.nu
+ADD https://raw.githubusercontent.com/bfren/nushell/main/0.98.0/env.nu /etc/nu/env.nu
 
 
 #======================================================================================================================
 # STAGE 2: load busybox
 #======================================================================================================================
 
-FROM ghcr.io/bfren/busybox:1.36.1-debian12.7 AS busybox
+FROM ghcr.io/bfren/busybox:1.36.1-debian12.7-240913 AS busybox
 
 
 #======================================================================================================================
@@ -37,7 +63,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v2.5.9 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v2.6.0 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
@@ -67,7 +93,7 @@ ENV \
     #   1: yes
     BF_UPGRADE_PACKAGES=0 \
     # Nushell version string to check against installed verion after installation
-    NUSHELL_VERSION=0.97.1
+    NU_VERSION=0.98.0
 
 RUN \
     # delete all binaries that will be replaced by busybox - those in ${IGNORE} will be left alone
