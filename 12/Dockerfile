@@ -1,5 +1,5 @@
 #======================================================================================================================
-# STAGE 0: get build information and download Nushell
+# STAGE 0: store build information
 #======================================================================================================================
 
 FROM --platform=${BUILDPLATFORM} golang:alpine AS build
@@ -10,21 +10,21 @@ RUN \
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
     echo "Debian: 12.7" >> /log && \
     echo "Busybox: 1.36.1" >> /log && \
-    echo "Nushell: 0.97.1" >> /log
+    echo "Nushell: 0.98.0" >> /log
 
 
 #======================================================================================================================
-# STAGE 1: load Nushell
+# STAGE 1: load busybox
 #======================================================================================================================
 
-FROM ghcr.io/bfren/nushell:0.97.1-bookworm as nushell
+FROM ghcr.io/bfren/busybox:1.36.1-debian12.7-240913 AS busybox
 
 
 #======================================================================================================================
-# STAGE 2: load busybox
+# STAGE 2: load Nushell
 #======================================================================================================================
 
-FROM ghcr.io/bfren/busybox:1.36.1-debian12.7 AS busybox
+FROM ghcr.io/bfren/nushell:0.98.0-bookworm-241005 AS nushell
 
 
 #======================================================================================================================
@@ -37,7 +37,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v2.5.9 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v2.7.0 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
@@ -67,7 +67,7 @@ ENV \
     #   1: yes
     BF_UPGRADE_PACKAGES=0 \
     # Nushell version string to check against installed verion after installation
-    NUSHELL_VERSION=0.97.1
+    NU_VERSION=0.98.0
 
 RUN \
     # delete all binaries that will be replaced by busybox - those in ${IGNORE} will be left alone
