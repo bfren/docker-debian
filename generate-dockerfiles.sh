@@ -4,10 +4,11 @@ set -euo pipefail
 
 docker pull bfren/alpine
 
-ALPINE_BRANCH="v2.6.0"
+ALPINE_BRANCH="v2.7.0"
 BUSYBOX_VERSION="1.36.1"
 BUSYBOX_BUILD="240913"
 NU_VERSION="0.98.0"
+NU_BUILD="241005"
 DEBIAN_VERSIONS="11 12"
 
 for V in ${DEBIAN_VERSIONS} ; do
@@ -16,6 +17,7 @@ for V in ${DEBIAN_VERSIONS} ; do
     DEBIAN_MINOR=`cat ./${V}/DEBIAN_MINOR`
     DEBIAN_NAME=`cat ./${V}/DEBIAN_NAME`
     BUSYBOX_IMAGE="${BUSYBOX_VERSION}-debian${DEBIAN_MINOR}-${BUSYBOX_BUILD}"
+    NU_IMAGE="${NU_VERSION}-${DEBIAN_NAME}-${NU_BUILD}"
 
     DOCKERFILE=$(docker run \
         -v ${PWD}:/ws \
@@ -30,7 +32,7 @@ for V in ${DEBIAN_VERSIONS} ; do
         DEBIAN_NAME=${DEBIAN_NAME} \
         BF_BIN=/usr/bin/bf \
         BF_ETC=/etc/bf \
-        NU_CONFIG=/etc/nu \
+        NU_IMAGE=${NU_IMAGE} \
         NU_VERSION=${NU_VERSION}
     )
 
