@@ -8,23 +8,23 @@ ARG TARGETPLATFORM
 RUN \
     # save platform and version information to log
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
-    echo "Debian: 12.8" >> /log && \
+    echo "Debian: 12.9" >> /log && \
     echo "Busybox: 1.36.1" >> /log && \
-    echo "Nushell: 0.100.0" >> /log
+    echo "Nushell: 0.101.0" >> /log
 
 
 #======================================================================================================================
 # STAGE 1: load busybox
 #======================================================================================================================
 
-FROM ghcr.io/bfren/busybox:1.36.1-debian12.8-240913 AS busybox
+FROM ghcr.io/bfren/busybox:1.36.1-debian12.9-240913 AS busybox
 
 
 #======================================================================================================================
 # STAGE 2: load Nushell
 #======================================================================================================================
 
-FROM ghcr.io/bfren/nushell:0.100.0-bookworm-241018 AS nushell
+FROM ghcr.io/bfren/nushell:0.101.0-bookworm-250124 AS nushell
 
 
 #======================================================================================================================
@@ -37,7 +37,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v2.8.0 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v2.8.1 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
@@ -45,7 +45,7 @@ RUN \
 # STAGE 4: install bfren platform
 #======================================================================================================================
 
-FROM debian:12.8-slim AS install
+FROM debian:12.9-slim AS install
 COPY --from=build /log /etc/bf/BUILD
 COPY --from=alpine /overlay /
 COPY --from=busybox / /bin
@@ -67,7 +67,7 @@ ENV \
     #   1: yes
     BF_UPGRADE_PACKAGES=0 \
     # Nushell version string to check against installed verion after installation
-    NU_VERSION=0.100.0
+    NU_VERSION=0.101.0
 
 RUN \
     # delete all binaries that will be replaced by busybox - those in ${IGNORE} will be left alone
