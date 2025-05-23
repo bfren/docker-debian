@@ -13,9 +13,7 @@ jobs:
       uses: actions/checkout@v4
     -
       name: Create Pull Request
-      uses: bfren/pull-request@v2
-      with:
-        github_token: ${{ secrets.PAT }}
-        destination_branch: main
-        pr_title: ${{ github.ref_name }}
-        pr_body: "Merging branch to create ${{ github.ref_name }}."
+      run: |
+        gh_pr_up() { gh pr create $* || gh pr edit $* }
+        gh_pr_up --title ${{ github.ref_name }} --body "Merging branch to create ${{ github.ref_name }}."
+
