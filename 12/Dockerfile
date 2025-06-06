@@ -2,7 +2,7 @@
 # STAGE 0: store build information
 #======================================================================================================================
 
-FROM --platform=${BUILDPLATFORM} golang:alpine AS build
+FROM --platform=${BUILDPLATFORM} ghcr.io/bfren/golang:alpine AS build
 ARG TARGETPLATFORM
 
 RUN \
@@ -37,7 +37,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v2.9.1 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v2.9.2 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
