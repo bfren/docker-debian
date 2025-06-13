@@ -10,7 +10,7 @@ RUN \
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
     echo "Debian: 12.11" >> /log && \
     echo "Busybox: 1.36.1" >> /log && \
-    echo "Nushell: 0.104.1" >> /log
+    echo "Nushell: 0.105.1" >> /log
 
 
 #======================================================================================================================
@@ -24,7 +24,7 @@ FROM ghcr.io/bfren/busybox:1.36.1-debian12.11-250606 AS busybox
 # STAGE 2: load Nushell
 #======================================================================================================================
 
-FROM ghcr.io/bfren/nushell:0.104.1-bookworm-250606 AS nushell
+FROM ghcr.io/bfren/nushell:0.105.1-bookworm-250606 AS nushell
 
 
 #======================================================================================================================
@@ -37,7 +37,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v2.9.2 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v2.9.4 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
@@ -67,7 +67,7 @@ ENV \
     #   1: yes
     BF_UPGRADE_PACKAGES=0 \
     # Nushell version string to check against installed verion after installation
-    NU_VERSION=0.104.1
+    NU_VERSION=0.105.1
 
 RUN \
     # delete all binaries that will be replaced by busybox - those in ${IGNORE} will be left alone
@@ -84,7 +84,7 @@ RUN \
     # reset /tmp permissions
     chmod 1777 /tmp && \
     # add packages required by Nushell
-    apt update && apt install --no-install-recommends -y libgit2-dev openssl sqlite3 && \
+    apt update && apt install --no-install-recommends -y libgit2-dev sqlite3 && \
     # setup Nushell using preinstallation script
     chmod +x /preinstall && /preinstall && \
     # run standard bf installation executable
