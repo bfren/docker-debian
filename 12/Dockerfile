@@ -37,7 +37,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v2.9.8 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v2.9.9 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
