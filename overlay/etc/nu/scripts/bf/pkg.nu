@@ -16,7 +16,7 @@ def action [
     let joined = $args | str join " "
     write debug $"($description): ($joined)." $script
     try {
-        with-env { DEBIAN_FRONTEND: "noninteractive" } {
+        with-env {DEBIAN_FRONTEND: "noninteractive"} {
             ^apt-get update
             ^apt-get $cmd -y ...$args
         }
