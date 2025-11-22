@@ -2,7 +2,7 @@
 # STAGE 0: store build information
 #======================================================================================================================
 
-FROM --platform=${BUILDPLATFORM} ghcr.io/bfren/golang:alpine AS build
+FROM --platform=${BUILDPLATFORM} quay.io/bfren/alpine AS build
 ARG TARGETPLATFORM
 
 RUN \
@@ -17,27 +17,27 @@ RUN \
 # STAGE 1: load busybox
 #======================================================================================================================
 
-FROM ghcr.io/bfren/busybox:1.36.1-debian12.12-250606 AS busybox
+FROM quay.io/bfren/busybox:1.36.1-debian12.12-251121 AS busybox
 
 
 #======================================================================================================================
 # STAGE 2: load Nushell
 #======================================================================================================================
 
-FROM ghcr.io/bfren/nushell:0.108.0-bookworm-250606 AS nushell
+FROM quay.io/bfren/nushell:0.108.0-bookworm-251121 AS nushell
 
 
 #======================================================================================================================
 # STAGE 3: get overlay from Alpine image
 #======================================================================================================================
 
-FROM ghcr.io/bfren/alpine AS alpine
+FROM quay.io/bfren/alpine AS alpine
 
 WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v2.9.9 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v3.0.0 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
