@@ -37,7 +37,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v3.0.0 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v3.0.1 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
@@ -98,7 +98,7 @@ RUN \
 FROM scratch AS final
 COPY --from=install / /
 
-LABEL org.opencontainers.image.description="Debian Linux with default Busybox and Nushell installed."
+LABEL org.opencontainers.image.description="Debian Linux with Busybox and Nushell installed."
 LABEL org.opencontainers.image.source="https://github.com/bfren/docker-debian"
 
 ENV \
