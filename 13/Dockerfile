@@ -2,13 +2,13 @@
 # STAGE 0: store build information
 #======================================================================================================================
 
-FROM --platform=${BUILDPLATFORM} ghcr.io/bfren/golang:alpine AS build
+FROM --platform=${BUILDPLATFORM} quay.io/bfren/alpine AS build
 ARG TARGETPLATFORM
 
 RUN \
     # save platform and version information to log
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
-    echo "Debian: 13.1" >> /log && \
+    echo "Debian: 13.2" >> /log && \
     echo "Busybox: 1.36.1" >> /log && \
     echo "Nushell: 0.108.0" >> /log
 
@@ -17,27 +17,27 @@ RUN \
 # STAGE 1: load busybox
 #======================================================================================================================
 
-FROM ghcr.io/bfren/busybox:1.36.1-debian13.1-250606 AS busybox
+FROM quay.io/bfren/busybox:1.36.1-debian13.2-251121 AS busybox
 
 
 #======================================================================================================================
 # STAGE 2: load Nushell
 #======================================================================================================================
 
-FROM ghcr.io/bfren/nushell:0.108.0-trixie-250606 AS nushell
+FROM quay.io/bfren/nushell:0.108.0-trixie-251121 AS nushell
 
 
 #======================================================================================================================
 # STAGE 3: get overlay from Alpine image
 #======================================================================================================================
 
-FROM ghcr.io/bfren/alpine AS alpine
+FROM quay.io/bfren/alpine AS alpine
 
 WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v2.9.9 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v3.0.1 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
@@ -45,7 +45,7 @@ RUN \
 # STAGE 4: install bfren platform
 #======================================================================================================================
 
-FROM debian:13.1-slim AS install
+FROM debian:13.2-slim AS install
 COPY --from=build /log /etc/bf/BUILD
 COPY --from=alpine /overlay /
 COPY --from=busybox / /bin
@@ -98,7 +98,7 @@ RUN \
 FROM scratch AS final
 COPY --from=install / /
 
-LABEL org.opencontainers.image.description="Debian Linux with default Busybox and Nushell installed."
+LABEL org.opencontainers.image.description="Debian Linux with Busybox and Nushell installed."
 LABEL org.opencontainers.image.source="https://github.com/bfren/docker-debian"
 
 ENV \
