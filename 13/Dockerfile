@@ -17,7 +17,7 @@ RUN \
 # STAGE 1: load busybox
 #======================================================================================================================
 
-FROM quay.io/bfren/busybox:1.36.1-debian13.3-251218 AS busybox
+FROM quay.io/bfren/busybox:1.36.1-debian13.3-260128 AS busybox
 
 
 #======================================================================================================================
@@ -37,7 +37,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v3.1.2 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v3.1.3 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
