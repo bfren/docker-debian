@@ -10,7 +10,7 @@ RUN \
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
     echo "Debian: 13.4" >> /log && \
     echo "Busybox: 1.36.1" >> /log && \
-    echo "Nushell: 0.111.0" >> /log
+    echo "Nushell: 0.112.1" >> /log
 
 
 #======================================================================================================================
@@ -24,7 +24,7 @@ FROM quay.io/bfren/busybox:1.36.1-debian13.4-260128 AS busybox
 # STAGE 2: load Nushell
 #======================================================================================================================
 
-FROM quay.io/bfren/nushell:0.111.0-trixie-251121 AS nushell
+FROM quay.io/bfren/nushell:0.112.1-trixie-251121 AS nushell
 
 
 #======================================================================================================================
@@ -67,7 +67,7 @@ ENV \
     #   1: yes
     BF_UPGRADE_PACKAGES=0 \
     # Nushell version string to check against installed verion after installation
-    NU_VERSION=0.111.0
+    NU_VERSION=0.112.1
 
 RUN \
     # delete all binaries that will be replaced by busybox - those in ${IGNORE} will be left alone
