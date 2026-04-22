@@ -24,7 +24,7 @@ FROM quay.io/bfren/busybox:1.36.1-debian13.4-260128 AS busybox
 # STAGE 2: load Nushell
 #======================================================================================================================
 
-FROM quay.io/bfren/nushell:0.112.1-trixie-251121 AS nushell
+FROM quay.io/bfren/nushell:0.112.1-trixie-260421 AS nushell
 
 
 #======================================================================================================================
@@ -37,7 +37,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v3.1.5 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v3.1.6 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
