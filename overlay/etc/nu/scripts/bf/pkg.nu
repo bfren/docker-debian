@@ -21,7 +21,7 @@ def action [
             ^apt-get $cmd -y ...$args
         }
     } catch {
-        write error $"Error ($description | str lowercase) packages: ($joined)." $script
+        write error $"Error ($description | str downcase) packages: ($joined)." $script
     }
 }
 
