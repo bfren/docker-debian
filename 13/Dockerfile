@@ -8,7 +8,7 @@ ARG TARGETPLATFORM
 RUN \
     # save platform and version information to log
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
-    echo "Debian: 13.6" >> /log && \
+    echo "Debian: 13.7" >> /log && \
     echo "Busybox: 1.36.1" >> /log && \
     echo "Nushell: 0.113.1" >> /log
 
@@ -17,7 +17,7 @@ RUN \
 # STAGE 1: load busybox
 #======================================================================================================================
 
-FROM quay.io/bfren/busybox:1.36.1-debian13.6-260920 AS busybox
+FROM quay.io/bfren/busybox:1.36.1-debian13.7-260920 AS busybox
 
 
 #======================================================================================================================
@@ -45,7 +45,7 @@ RUN \
 # STAGE 4: install bfren platform
 #======================================================================================================================
 
-FROM debian:13.6-slim AS install
+FROM debian:13.7-slim AS install
 COPY --from=build /log /etc/bf/BUILD
 COPY --from=alpine /overlay /
 COPY --from=busybox / /bin
