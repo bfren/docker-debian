@@ -23,7 +23,7 @@ def main [] {
     # add environment loader and bf module to config
     bf write "Adding environment loader and bf module to config."
     bf fs read "/tmp/env-load.nu" | bf config
-    bf config use bf
+    bf config use_mod bf
 
     # set timezone
     bf tz (bf env TZ)
