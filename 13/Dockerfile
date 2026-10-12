@@ -9,7 +9,7 @@ RUN \
     # save platform and version information to log
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
     echo "Debian: 13.7" >> /log && \
-    echo "Busybox: 1.36.1" >> /log && \
+    echo "Busybox: 1.37.0" >> /log && \
     echo "Nushell: 0.116.1" >> /log
 
 
@@ -17,7 +17,7 @@ RUN \
 # STAGE 1: load busybox
 #======================================================================================================================
 
-FROM quay.io/bfren/busybox:1.36.1-debian13.7-260920 AS busybox
+FROM quay.io/bfren/busybox:1.37.0-debian13.7-261012 AS busybox
 
 
 #======================================================================================================================
@@ -37,7 +37,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v3.4.0 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v3.5.0 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
