@@ -17,8 +17,12 @@ def main [] {
         bf write error "Unable to install additional packages."
     }
 
+    # link bf-withenv for easier use in shell scripts
+    bf write "Creating withenv link."
+    ln $"/usr/bin/bf/bf-withenv" /bin/withenv
+
     # make esh script executable
-    bf ch --mode +x /usr/bin/esh
+    bf ch --mode 0555 /usr/bin/esh
 
     # add environment loader and bf module to config
     bf write "Adding environment loader and bf module to config."
