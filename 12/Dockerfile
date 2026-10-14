@@ -50,6 +50,9 @@ COPY --from=build /log /etc/bf/BUILD
 COPY --from=alpine /overlay /
 COPY --from=busybox / /bin
 COPY --from=nushell / /
+# CA certificate bundle (used by Nushell for HTTPS) - copied from Alpine rather than installing ca-certificates,
+# which pulls in openssl and runs update-ca-certificates over every certificate (very slow under QEMU)
+COPY --from=alpine /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 
 ARG BF_IMAGE
 ARG BF_PUBLISHING
