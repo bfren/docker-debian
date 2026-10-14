@@ -83,8 +83,6 @@ RUN \
     busybox --install && \
     # reset /tmp permissions
     chmod 1777 /tmp && \
-    # add packages required by Nushell
-    apt-get update && apt-get install --no-install-recommends -y libgit2-dev sqlite3 && \
     # setup Nushell using preinstallation script
     chmod +x /preinstall && /preinstall && \
     # run standard bf installation executable
