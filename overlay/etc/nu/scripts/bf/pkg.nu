@@ -1,6 +1,4 @@
-use dump.nu
-use handle.nu
-use write.nu
+use bf/write.nu
 
 # Perform a package action, capturing result and outputting any errors
 def action [
