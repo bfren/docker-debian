@@ -1,7 +1,5 @@
-use del.nu
-use dump.nu
-use fs.nu
-use write.nu
+use bf/fs.nu
+use bf/write.nu
 
 # path to current timezone info
 const localtime = "/etc/localtime"

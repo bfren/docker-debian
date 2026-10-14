@@ -1,6 +1,4 @@
-use dump.nu
-use handle.nu
-use write.nu
+use bf/write.nu
 
 # Perform a package action, capturing result and outputting any errors
 def action [
@@ -25,21 +23,21 @@ def action [
     }
 }
 
-# Use apk to install a list of packages
+# Use apt-get to install a list of packages
 export def install [
     args: list<string>  # List of packages to add / arguments
 ]: nothing -> nothing {
     action "install" "Installing" "install" $args
 }
 
-# Use apk to remove a list of packages
+# Use apt-get to remove a list of packages
 export def remove [
     args: list<string>  # List of packages to delete / arguments
 ]: nothing -> nothing {
     action "remove" "Removing" "remove" $args
 }
 
-# Use apk to upgrade a list of packages
+# Use apt-get to upgrade a list of packages
 export def upgrade [
     args: list<string> = []  # List of packages to upgrade / arguments
 ]: nothing -> nothing {
