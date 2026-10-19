@@ -1,6 +1,6 @@
 # Debian
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/bfren/docker-debian) ![Docker Pulls](https://img.shields.io/endpoint?url=https%3A%2F%2Fbfren.dev%2Fdocker%2Fpulls%2Fdebian?) ![Docker Image Size](https://img.shields.io/endpoint?url=https%3A%2F%2Fbfren.dev%2Fdocker%2Fsize%2Fdebian) ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bfren/docker-debian/dev.yml?branch=main)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/bfren/docker-debian) ![Docker Pulls](https://img.shields.io/endpoint?url=https%3A%2F%2Fbfren.dev%2Fdocker%2Fpulls%2Fdebian) ![Docker Image Size](https://img.shields.io/endpoint?url=https%3A%2F%2Fbfren.dev%2Fdocker%2Fsize%2Fdebian) ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bfren/docker-debian/dev.yml?branch=main)
 
 [Docker Hub](https://hub.docker.com/r/bfren/debian) - [Quay.io](https://quay.io/repository/bfren/debian) - [bfren ecosystem](https://github.com/bfren/docker)
 
