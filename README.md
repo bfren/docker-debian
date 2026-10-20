@@ -32,7 +32,7 @@ my-image/
 `Dockerfile`:
 
 ```dockerfile
-FROM quay.io/bfren/debian:debian13
+FROM quay.io/bfren/debian:debian13-5.4
 
 ARG BF_IMAGE=my-image
 ARG BF_VERSION=1.0.0
@@ -74,11 +74,10 @@ Inside the container, `bf image` shows the image name and version.
 * 📦 `bf pkg` works with `apt`, so your install scripts read the same as on Alpine
 * 🕐 Timezone set to `Europe/London`
 * 🧪 Built-in test runner that checks its tests really execute
-* 🖥️ Built for `linux/amd64`, `linux/arm64` and `linux/arm/v7`
 
 ## Tags
 
-Images are published to Docker Hub (`bfren/debian`) and Quay.io (`quay.io/bfren/debian`).
+Images are published to Docker Hub (`bfren/debian`) and Quay.io (`quay.io/bfren/debian`) for `linux/amd64`, `linux/arm/v7` and `linux/arm64`.
 
 | Tag                           | Example                | Use when                                              |
 | ----------------------------- | ---------------------- | ----------------------------------------------------- |
