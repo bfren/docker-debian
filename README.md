@@ -136,8 +136,9 @@ Everything else - `bf env`, `bf write`, `bf fs`, `bf ch`, `bf esh`, `bf http`, `
 `/test` runs the Nushell tests in `/etc/nu/scripts/tests`, as in Alpine. Tests are removed from published images, so run them on your own builds.
 
 ```sh
-./test.sh        # builds the Debian 13 image and runs /test
-./test.sh 12     # the same for Debian 12
+./test.nu        # builds the Debian 13 image and runs /test
+./test.nu 12     # the same for Debian 12
+./test.nu --all  # every version, in parallel
 ```
 
 ## Troubleshooting
