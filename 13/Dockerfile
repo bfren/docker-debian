@@ -9,7 +9,7 @@ RUN \
     # save platform and version information to log
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
     echo "Debian: 13.7" >> /log && \
-    echo "Busybox: 1.36.1" >> /log && \
+    echo "Busybox: 1.37.0" >> /log && \
     echo "Nushell: 0.116.1" >> /log
 
 
@@ -17,14 +17,14 @@ RUN \
 # STAGE 1: load busybox
 #======================================================================================================================
 
-FROM quay.io/bfren/busybox:1.36.1-debian13.7-260920 AS busybox
+FROM quay.io/bfren/busybox:1.37.0-debian13.7-261012 AS busybox
 
 
 #======================================================================================================================
 # STAGE 2: load Nushell
 #======================================================================================================================
 
-FROM quay.io/bfren/nushell:0.116.1-trixie-260421 AS nushell
+FROM quay.io/bfren/nushell:0.116.1-trixie-261014 AS nushell
 
 
 #======================================================================================================================
@@ -37,7 +37,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v3.4.0 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v3.5.0 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
@@ -50,6 +50,9 @@ COPY --from=build /log /etc/bf/BUILD
 COPY --from=alpine /overlay /
 COPY --from=busybox / /bin
 COPY --from=nushell / /
+# CA certificate bundle (used by Nushell for HTTPS) - copied from Alpine rather than installing ca-certificates,
+# which pulls in openssl and runs update-ca-certificates over every certificate (very slow under QEMU)
+COPY --from=alpine /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 
 ARG BF_IMAGE
 ARG BF_PUBLISHING
@@ -65,7 +68,7 @@ ENV \
     # whether or not to upgrade packages during installation
     #   0: no
     #   1: yes
-    BF_UPGRADE_PACKAGES=0 \
+    BF_UPGRADE_PACKAGES=1 \
     # Nushell version string to check against installed verion after installation
     NU_VERSION=0.116.1
 
@@ -83,8 +86,6 @@ RUN \
     busybox --install && \
     # reset /tmp permissions
     chmod 1777 /tmp && \
-    # add packages required by Nushell
-    apt update && apt install --no-install-recommends -y libgit2-dev sqlite3 && \
     # setup Nushell using preinstallation script
     chmod +x /preinstall && /preinstall && \
     # run standard bf installation executable
