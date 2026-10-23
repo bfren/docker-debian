@@ -10,25 +10,33 @@ RUN \
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
     echo "Debian: <%= ${DEBIAN_MINOR} %>" >> /log && \
     echo "Busybox: <%= ${BUSYBOX_VERSION} %>" >> /log && \
-    echo "Nushell: <%= ${NU_VERSION} %>" >> /log
+    echo "Nushell: <%= ${NU_VERSION} %>" >> /log && \
+    echo "Figlet: <%= ${FIGLET_VERSION} %>" >> /log
 
 
 #======================================================================================================================
 # STAGE 1: load busybox
 #======================================================================================================================
 
-FROM quay.io/bfren/busybox:<%= ${BUSYBOX_IMAGE} %> AS busybox
+FROM quay.io/bfren-bin/busybox:<%= ${BUSYBOX_IMAGE} %> AS busybox
 
 
 #======================================================================================================================
-# STAGE 2: load Nushell
+# STAGE 2: load nushell
 #======================================================================================================================
 
-FROM quay.io/bfren/nushell:<%= ${NU_IMAGE} %> AS nushell
+FROM quay.io/bfren-bin/nushell:<%= ${NU_IMAGE} %> AS nushell
 
 
 #======================================================================================================================
-# STAGE 3: get overlay from Alpine image
+# STAGE 3: load figlet
+#======================================================================================================================
+
+FROM quay.io/bfren-bin/figlet:<%= ${FIGLET_IMAGE} %> AS figlet
+
+
+#======================================================================================================================
+# STAGE 4: get overlay from Alpine image
 #======================================================================================================================
 
 FROM quay.io/bfren/alpine AS alpine
@@ -42,7 +50,7 @@ RUN \
 
 
 #======================================================================================================================
-# STAGE 4: install bfren platform
+# STAGE 5: install bfren platform
 #======================================================================================================================
 
 FROM debian:<%= ${DEBIAN_MINOR} %>-slim AS install
@@ -50,6 +58,7 @@ COPY --from=build /log /etc/bf/BUILD
 COPY --from=alpine /overlay /
 COPY --from=busybox / /bin
 COPY --from=nushell / /
+COPY --from=figlet / /
 # CA certificate bundle (used by Nushell for HTTPS) - copied from Alpine rather than installing ca-certificates,
 # which pulls in openssl and runs update-ca-certificates over every certificate (very slow under QEMU)
 COPY --from=alpine /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
@@ -93,7 +102,7 @@ RUN \
 
 
 #======================================================================================================================
-# STAGE 5: create final image
+# STAGE 6: create final image
 #======================================================================================================================
 
 FROM scratch AS final

@@ -10,25 +10,33 @@ RUN \
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
     echo "Debian: 13.7" >> /log && \
     echo "Busybox: 1.37.0" >> /log && \
-    echo "Nushell: 0.116.1" >> /log
+    echo "Nushell: 0.116.1" >> /log && \
+    echo "Figlet: 2.2.5" >> /log
 
 
 #======================================================================================================================
 # STAGE 1: load busybox
 #======================================================================================================================
 
-FROM quay.io/bfren/busybox:1.37.0-debian13.7-261012 AS busybox
+FROM quay.io/bfren-bin/busybox:1.37.0-261022 AS busybox
 
 
 #======================================================================================================================
-# STAGE 2: load Nushell
+# STAGE 2: load nushell
 #======================================================================================================================
 
-FROM quay.io/bfren/nushell:0.116.1-trixie-261014 AS nushell
+FROM quay.io/bfren-bin/nushell:0.116.1-trixie-261014 AS nushell
 
 
 #======================================================================================================================
-# STAGE 3: get overlay from Alpine image
+# STAGE 3: load figlet
+#======================================================================================================================
+
+FROM quay.io/bfren-bin/figlet:2.2.5-261022 AS figlet
+
+
+#======================================================================================================================
+# STAGE 4: get overlay from Alpine image
 #======================================================================================================================
 
 FROM quay.io/bfren/alpine AS alpine
@@ -42,7 +50,7 @@ RUN \
 
 
 #======================================================================================================================
-# STAGE 4: install bfren platform
+# STAGE 5: install bfren platform
 #======================================================================================================================
 
 FROM debian:13.7-slim AS install
@@ -50,6 +58,7 @@ COPY --from=build /log /etc/bf/BUILD
 COPY --from=alpine /overlay /
 COPY --from=busybox / /bin
 COPY --from=nushell / /
+COPY --from=figlet / /
 # CA certificate bundle (used by Nushell for HTTPS) - copied from Alpine rather than installing ca-certificates,
 # which pulls in openssl and runs update-ca-certificates over every certificate (very slow under QEMU)
 COPY --from=alpine /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
@@ -93,7 +102,7 @@ RUN \
 
 
 #======================================================================================================================
-# STAGE 5: create final image
+# STAGE 6: create final image
 #======================================================================================================================
 
 FROM scratch AS final

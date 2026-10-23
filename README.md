@@ -15,7 +15,7 @@ It is Debian (slim) with:
 * [Nushell](https://www.nushell.sh) and the `bf` module, exactly as in the Alpine image
 * [Busybox](https://busybox.net), so the same small utilities (`ln`, `wget`, `adduser`, …) behave the same on both
 * `apt` configured not to install recommended or suggested packages, to keep images small
-* `ca-certificates` and `figlet` pre-installed
+* `ca-certificates` pre-installed, and the same static build of [figlet](https://github.com/bfren/figlet) as the Alpine image
 
 Use it as the `FROM` line for images that run a single command or tool. For images that run a long-lived service, use [Debian + S6](https://github.com/bfren/docker-debian-s6) instead. If you don't need Debian, prefer [Alpine](https://github.com/bfren/docker-alpine) - it is smaller.
 
