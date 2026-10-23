@@ -10,8 +10,7 @@ RUN \
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
     echo "Debian: <%= ${DEBIAN_MINOR} %>" >> /log && \
     echo "Busybox: <%= ${BUSYBOX_VERSION} %>" >> /log && \
-    echo "Nushell: <%= ${NU_VERSION} %>" >> /log && \
-    echo "Figlet: <%= ${FIGLET_VERSION} %>" >> /log
+    echo "Nushell: <%= ${NU_VERSION} %>" >> /log
 
 
 #======================================================================================================================

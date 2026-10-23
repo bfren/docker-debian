@@ -10,8 +10,7 @@ RUN \
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
     echo "Debian: 13.7" >> /log && \
     echo "Busybox: 1.37.0" >> /log && \
-    echo "Nushell: 0.116.1" >> /log && \
-    echo "Figlet: 2.2.5" >> /log
+    echo "Nushell: 0.116.1" >> /log
 
 
 #======================================================================================================================
