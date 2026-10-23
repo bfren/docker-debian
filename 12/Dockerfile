@@ -17,18 +17,25 @@ RUN \
 # STAGE 1: load busybox
 #======================================================================================================================
 
-FROM quay.io/bfren/busybox:1.37.0-debian12.15-261012 AS busybox
+FROM quay.io/bfren-bin/busybox:1.37.0-261022 AS busybox
 
 
 #======================================================================================================================
-# STAGE 2: load Nushell
+# STAGE 2: load nushell
 #======================================================================================================================
 
-FROM quay.io/bfren/nushell:0.116.1-bookworm-261014 AS nushell
+FROM quay.io/bfren-bin/nushell:0.116.1-bookworm-261014 AS nushell
 
 
 #======================================================================================================================
-# STAGE 3: get overlay from Alpine image
+# STAGE 3: load figlet
+#======================================================================================================================
+
+FROM quay.io/bfren-bin/figlet:2.2.5-261022 AS figlet
+
+
+#======================================================================================================================
+# STAGE 4: get overlay from Alpine image
 #======================================================================================================================
 
 FROM quay.io/bfren/alpine AS alpine
@@ -37,12 +44,12 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v3.5.1 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch v3.5.2 https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
 #======================================================================================================================
-# STAGE 4: install bfren platform
+# STAGE 5: install bfren platform
 #======================================================================================================================
 
 FROM debian:12.15-slim AS install
@@ -50,6 +57,7 @@ COPY --from=build /log /etc/bf/BUILD
 COPY --from=alpine /overlay /
 COPY --from=busybox / /bin
 COPY --from=nushell / /
+COPY --from=figlet / /
 # CA certificate bundle (used by Nushell for HTTPS) - copied from Alpine rather than installing ca-certificates,
 # which pulls in openssl and runs update-ca-certificates over every certificate (very slow under QEMU)
 COPY --from=alpine /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
@@ -73,14 +81,15 @@ ENV \
     NU_VERSION=0.116.1
 
 RUN \
-    # delete all binaries that will be replaced by busybox - those in ${IGNORE} will be left alone
+    # delete all binaries that will be replaced by busybox - those in ${IGNORE} keep their Debian (GNU) versions, e.g.:
+    #   dpkg dpkg-deb tar   - dpkg unpacks packages using GNU tar options (e.g. --warning=no-timestamp)
+    # applets are matched as whole words (grep -w), so only the ones named here are kept
     echo "Installing busybox." && \
     X=$(busybox --list-full) ; \
-    IGNORE="[ [[ addgroup adduser cmp dpkg dpkg-deb df find grep logger mkdir setarch" ; \
+    IGNORE="[ [[ addgroup adduser arch cmp date dd dpkg dpkg-deb df du find grep logger mkdir realpath setarch tar" ; \
     for A in ${X} ; do \
-    if busybox printf "%s\0" "${IGNORE}" | busybox grep -q -F `busybox basename ${A}` ; then continue ; \
-    else busybox rm -f /${A} ; \
-    fi ; \
+        case " ${IGNORE} " in *" ${A##*/} "*) continue ;; esac ; \
+        busybox rm -f /${A} ; \
     done ; \
     # install busybox
     busybox --install && \
@@ -93,7 +102,7 @@ RUN \
 
 
 #======================================================================================================================
-# STAGE 5: create final image
+# STAGE 6: create final image
 #======================================================================================================================
 
 FROM scratch AS final

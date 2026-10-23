@@ -17,18 +17,25 @@ RUN \
 # STAGE 1: load busybox
 #======================================================================================================================
 
-FROM quay.io/bfren/busybox:<%= ${BUSYBOX_IMAGE} %> AS busybox
+FROM quay.io/bfren-bin/busybox:<%= ${BUSYBOX_IMAGE} %> AS busybox
 
 
 #======================================================================================================================
-# STAGE 2: load Nushell
+# STAGE 2: load nushell
 #======================================================================================================================
 
-FROM quay.io/bfren/nushell:<%= ${NU_IMAGE} %> AS nushell
+FROM quay.io/bfren-bin/nushell:<%= ${NU_IMAGE} %> AS nushell
 
 
 #======================================================================================================================
-# STAGE 3: get overlay from Alpine image
+# STAGE 3: load figlet
+#======================================================================================================================
+
+FROM quay.io/bfren-bin/figlet:<%= ${FIGLET_IMAGE} %> AS figlet
+
+
+#======================================================================================================================
+# STAGE 4: get overlay from Alpine image
 #======================================================================================================================
 
 FROM quay.io/bfren/alpine AS alpine
@@ -42,7 +49,7 @@ RUN \
 
 
 #======================================================================================================================
-# STAGE 4: install bfren platform
+# STAGE 5: install bfren platform
 #======================================================================================================================
 
 FROM debian:<%= ${DEBIAN_MINOR} %>-slim AS install
@@ -50,6 +57,7 @@ COPY --from=build /log /etc/bf/BUILD
 COPY --from=alpine /overlay /
 COPY --from=busybox / /bin
 COPY --from=nushell / /
+COPY --from=figlet / /
 # CA certificate bundle (used by Nushell for HTTPS) - copied from Alpine rather than installing ca-certificates,
 # which pulls in openssl and runs update-ca-certificates over every certificate (very slow under QEMU)
 COPY --from=alpine /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
@@ -73,14 +81,15 @@ ENV \
     NU_VERSION=<%= ${NU_VERSION} %>
 
 RUN \
-    # delete all binaries that will be replaced by busybox - those in ${IGNORE} will be left alone
+    # delete all binaries that will be replaced by busybox - those in ${IGNORE} keep their Debian (GNU) versions, e.g.:
+    #   dpkg dpkg-deb tar   - dpkg unpacks packages using GNU tar options (e.g. --warning=no-timestamp)
+    # applets are matched as whole words (grep -w), so only the ones named here are kept
     echo "Installing busybox." && \
     X=$(busybox --list-full) ; \
-    IGNORE="[ [[ addgroup adduser cmp dpkg dpkg-deb df find grep logger mkdir setarch" ; \
+    IGNORE="[ [[ addgroup adduser arch cmp date dd dpkg dpkg-deb df du find grep logger mkdir realpath setarch tar" ; \
     for A in ${X} ; do \
-    if busybox printf "%s\0" "${IGNORE}" | busybox grep -q -F `busybox basename ${A}` ; then continue ; \
-    else busybox rm -f /${A} ; \
-    fi ; \
+        case " ${IGNORE} " in *" ${A##*/} "*) continue ;; esac ; \
+        busybox rm -f /${A} ; \
     done ; \
     # install busybox
     busybox --install && \
@@ -93,7 +102,7 @@ RUN \
 
 
 #======================================================================================================================
-# STAGE 5: create final image
+# STAGE 6: create final image
 #======================================================================================================================
 
 FROM scratch AS final
