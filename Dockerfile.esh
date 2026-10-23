@@ -89,8 +89,8 @@ RUN \
     X=$(busybox --list-full) ; \
     IGNORE="[ [[ addgroup adduser arch cmp date dd dpkg dpkg-deb df du find grep logger mkdir realpath setarch tar" ; \
     for A in ${X} ; do \
-    if busybox printf "%s\0" "${IGNORE}" | busybox grep -qw -F `busybox basename ${A}` ; then continue ; \
-    else busybox rm -f /${A} ; fi ; \
+        case " ${IGNORE} " in *" ${A##*/} "*) continue ;; esac ; \
+        busybox rm -f /${A} ; \
     done ; \
     # install busybox
     busybox --install && \
