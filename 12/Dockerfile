@@ -82,14 +82,15 @@ ENV \
     NU_VERSION=0.116.1
 
 RUN \
-    # delete all binaries that will be replaced by busybox - those in ${IGNORE} will be left alone
+    # delete all binaries that will be replaced by busybox - those in ${IGNORE} keep their Debian (GNU) versions, e.g.:
+    #   dpkg dpkg-deb tar   - dpkg unpacks packages using GNU tar options (e.g. --warning=no-timestamp)
+    # applets are matched as whole words (grep -w), so only the ones named here are kept
     echo "Installing busybox." && \
     X=$(busybox --list-full) ; \
-    IGNORE="[ [[ addgroup adduser cmp dpkg dpkg-deb df find grep logger mkdir setarch" ; \
+    IGNORE="[ [[ addgroup adduser arch cmp date dd dpkg dpkg-deb df du find grep logger mkdir realpath setarch tar" ; \
     for A in ${X} ; do \
-    if busybox printf "%s\0" "${IGNORE}" | busybox grep -q -F `busybox basename ${A}` ; then continue ; \
-    else busybox rm -f /${A} ; \
-    fi ; \
+    if busybox printf "%s\0" "${IGNORE}" | busybox grep -qw -F `busybox basename ${A}` ; then continue ; \
+    else busybox rm -f /${A} ; fi ; \
     done ; \
     # install busybox
     busybox --install && \
