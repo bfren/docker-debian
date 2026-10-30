@@ -52,7 +52,7 @@ RUN \
 # STAGE 5: install bfren platform
 #======================================================================================================================
 
-FROM debian:12.15-slim AS install
+FROM quay.io/bfren-bin/debian:12.15-slim AS install
 COPY --from=build /log /etc/bf/BUILD
 COPY --from=alpine /overlay /
 COPY --from=busybox / /bin
