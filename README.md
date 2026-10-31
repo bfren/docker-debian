@@ -32,7 +32,7 @@ my-image/
 `Dockerfile`:
 
 ```dockerfile
-FROM quay.io/bfren/debian:debian13-5.4
+FROM quay.io/bfren/debian:debian13-6.0
 
 ARG BF_IMAGE=my-image
 ARG BF_VERSION=1.0.0
@@ -82,13 +82,13 @@ Images are published to Docker Hub (`bfren/debian`) and Quay.io (`quay.io/bfren/
 | Tag                           | Example                | Use when                                              |
 | ----------------------------- | ---------------------- | ----------------------------------------------------- |
 | `debianX`                     | `debian13`             | You want the latest image for a Debian version        |
-| `debianX-MAJOR`               | `debian13-5`           | You want updates, but not breaking changes            |
-| `debianX-MINOR`               | `debian13-5.4`         | You want fixes only - **recommended for building on** |
-| `debianX-VERSION`             | `debian13-5.4.0`       | You want to pin this image exactly                    |
+| `debianX-MAJOR`               | `debian13-6`           | You want updates, but not breaking changes            |
+| `debianX-MINOR`               | `debian13-6.0`         | You want fixes only - **recommended for building on** |
+| `debianX-VERSION`             | `debian13-6.0.0`       | You want to pin this image exactly                    |
 | `debianX.Y`                   | `debian13.7`           | You want an exact Debian point release                |
-| `debianX.Y-VERSION`           | `debian13.7-5.4.0`     | You want to pin both                                  |
-| `NAME`, `NAME-MAJOR` …        | `trixie`, `trixie-5.4` | As above, using the Debian release name               |
-| `latest`, `5`, `5.4`, `5.4.0` |                        | As above, on the newest Debian version                |
+| `debianX.Y-VERSION`           | `debian13.7-6.0.0`     | You want to pin both                                  |
+| `NAME`, `NAME-MAJOR` …        | `trixie`, `trixie-6.0` | As above, using the Debian release name               |
+| `latest`, `6`, `6.0`, `6.0.0` |                        | As above, on the newest Debian version                |
 
 | Debian        | Security support ends | Community LTS ends |
 | ------------- | --------------------- | ------------------ |
