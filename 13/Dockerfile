@@ -10,7 +10,7 @@ RUN \
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
     echo "Debian: 13.7" >> /log && \
     echo "Busybox: 1.37.0" >> /log && \
-    echo "Nushell: 0.116.1" >> /log
+    echo "txiki.js: 26.11.0" >> /log
 
 
 #======================================================================================================================
@@ -21,10 +21,10 @@ FROM quay.io/bfren-bin/busybox:1.37.0-261022 AS busybox
 
 
 #======================================================================================================================
-# STAGE 2: load nushell
+# STAGE 2: load txikijs
 #======================================================================================================================
 
-FROM quay.io/bfren-bin/nushell:0.116.1-trixie-261014 AS nushell
+FROM quay.io/bfren-bin/txikijs:26.11.0-261101 AS txikijs
 
 
 #======================================================================================================================
@@ -44,7 +44,7 @@ WORKDIR /tmp
 RUN \
     # get the overlay from the Alpine base image
     echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v3.5.2 https://github.com/bfren/docker-alpine.git && \
+    apk add git && git clone --branch tjs https://github.com/bfren/docker-alpine.git && \
     mv docker-alpine/overlay /
 
 
@@ -52,13 +52,13 @@ RUN \
 # STAGE 5: install bfren platform
 #======================================================================================================================
 
-FROM debian:13.7-slim AS install
+FROM quay.io/bfren-bin/debian:13.7-slim AS install
 COPY --from=build /log /etc/bf/BUILD
 COPY --from=alpine /overlay /
 COPY --from=busybox / /bin
-COPY --from=nushell / /
+COPY --from=txikijs / /bin
 COPY --from=figlet / /
-# CA certificate bundle (used by Nushell for HTTPS) - copied from Alpine rather than installing ca-certificates,
+# CA certificate bundle (used by txiki.js for HTTPS) - copied from Alpine rather than installing ca-certificates,
 # which pulls in openssl and runs update-ca-certificates over every certificate (very slow under QEMU)
 COPY --from=alpine /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 
@@ -77,8 +77,8 @@ ENV \
     #   0: no
     #   1: yes
     BF_UPGRADE_PACKAGES=1 \
-    # Nushell version string to check against installed verion after installation
-    NU_VERSION=0.116.1
+    # txiki.js version string to check against installed version after installation
+    TJS_VERSION=26.11.0
 
 RUN \
     # delete all binaries that will be replaced by busybox - those in ${IGNORE} keep their Debian (GNU) versions, e.g.:
@@ -91,14 +91,14 @@ RUN \
         case " ${IGNORE} " in *" ${A##*/} "*) continue ;; esac ; \
         busybox rm -f /${A} ; \
     done ; \
-    # install busybox
-    busybox --install && \
+    # install busybox applets as symlinks - unlike hard links they cannot be split from /bin/busybox when layers are copied or cached
+    busybox --install -s && \
     # reset /tmp permissions
     chmod 1777 /tmp && \
-    # setup Nushell using preinstallation script
+    # setup txiki.js using preinstallation script
     chmod +x /preinstall && /preinstall && \
-    # run standard bf installation executable
-    /usr/bin/bf/bf-install
+    # run standard bf installation executable - tjsh is not available until preinstall has run
+    tjs run --import-map /etc/tjs/map.json /usr/bin/bf/bf-install.js
 
 
 #======================================================================================================================
@@ -108,7 +108,7 @@ RUN \
 FROM scratch AS final
 COPY --from=install / /
 
-LABEL org.opencontainers.image.description="Debian Linux with Busybox and Nushell installed."
+LABEL org.opencontainers.image.description="Debian Linux with Busybox and txiki.js installed."
 LABEL org.opencontainers.image.source="https://github.com/bfren/docker-debian"
 
 ENV \

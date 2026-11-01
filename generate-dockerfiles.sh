@@ -2,15 +2,16 @@
 
 set -euo pipefail
 
-docker pull bfren/alpine
+docker pull quay.io/bfren/alpine
 
-ALPINE_BRANCH="v3.5.2"
+# txiki.js alpine overlay - a branch until the first txiki.js alpine release is tagged
+ALPINE_BRANCH="tjs"
 BUSYBOX_VERSION="1.37.0"
 BUSYBOX_BUILD="261022"
 FIGLET_VERSION="2.2.5"
 FIGLET_BUILD="261022"
-NU_VERSION="0.116.1"
-NU_BUILD="261014"
+TJS_VERSION="26.11.0"
+TJS_BUILD="261101"
 DEBIAN_VERSIONS="12 13"
 
 for V in ${DEBIAN_VERSIONS} ; do
@@ -20,7 +21,7 @@ for V in ${DEBIAN_VERSIONS} ; do
     DEBIAN_NAME=`cat ./${V}/DEBIAN_NAME`
     BUSYBOX_IMAGE="${BUSYBOX_VERSION}-${BUSYBOX_BUILD}"
     FIGLET_IMAGE="${FIGLET_VERSION}-${FIGLET_BUILD}"
-    NU_IMAGE="${NU_VERSION}-${DEBIAN_NAME}-${NU_BUILD}"
+    TJS_IMAGE="${TJS_VERSION}-${TJS_BUILD}"
 
     DOCKERFILE=$(docker run \
         -v ${PWD}:/ws \
@@ -37,8 +38,8 @@ for V in ${DEBIAN_VERSIONS} ; do
         DEBIAN_NAME=${DEBIAN_NAME} \
         BF_BIN=/usr/bin/bf \
         BF_ETC=/etc/bf \
-        NU_IMAGE=${NU_IMAGE} \
-        NU_VERSION=${NU_VERSION}
+        TJS_IMAGE=${TJS_IMAGE} \
+        TJS_VERSION=${TJS_VERSION}
     )
 
     echo "${DOCKERFILE}" > ./${V}/Dockerfile
