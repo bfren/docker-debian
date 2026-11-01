@@ -15,5 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The install stage now uses `quay.io/bfren-bin/debian` instead of `debian` from Docker Hub.
 - Images are built and published by the shared `bfren/docker` build workflow (`build.yml`), replacing the separate
   `dev.yml` and `publish.yml` workflows.
+- `bf clean` comes from the Alpine overlay instead of a Debian copy - its default cache directories (the apt lists and
+  man pages) are now `bf pkg caches`.
 
 [6.0.0]: https://github.com/bfren/docker-debian/compare/v5.4.3...v6.0.0

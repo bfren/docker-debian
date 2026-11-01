@@ -1,5 +1,8 @@
 use bf/write.nu
 
+# Package manager cache directories, deleted by bf clean
+export const caches = ["/var/lib/apt/lists/*" "/usr/share/man"]
+
 # Perform a package action, capturing result and outputting any errors
 def action [
     name: string
