@@ -91,8 +91,8 @@ RUN \
         case " ${IGNORE} " in *" ${A##*/} "*) continue ;; esac ; \
         busybox rm -f /${A} ; \
     done ; \
-    # install busybox
-    busybox --install && \
+    # install busybox applets as symlinks - unlike hard links they cannot be split from /bin/busybox when layers are copied or cached
+    busybox --install -s && \
     # reset /tmp permissions
     chmod 1777 /tmp && \
     # setup Nushell using preinstallation script
