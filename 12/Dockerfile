@@ -40,12 +40,8 @@ FROM quay.io/bfren-bin/figlet:2.2.5-261022 AS figlet
 
 FROM quay.io/bfren/alpine AS alpine
 
-WORKDIR /tmp
-RUN \
-    # get the overlay from the Alpine base image
-    echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch v4.0.0 https://github.com/bfren/docker-alpine.git && \
-    mv docker-alpine/overlay /
+# ADD checks the branch's latest commit on every build, so a cached copy of an older commit is never used
+ADD https://github.com/bfren/docker-alpine.git#v4.0.0 /tmp/docker-alpine
 
 
 #======================================================================================================================
@@ -54,7 +50,7 @@ RUN \
 
 FROM quay.io/bfren-bin/debian:12.15-slim AS install
 COPY --from=build /log /etc/bf/BUILD
-COPY --from=alpine /overlay /
+COPY --from=alpine /tmp/docker-alpine/overlay /
 COPY --from=busybox / /bin
 COPY --from=nushell / /
 COPY --from=figlet / /
