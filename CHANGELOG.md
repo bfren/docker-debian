@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [6.0.0] - Unreleased
+## [6.0.0] - 2026-11-05
 
 ### Changed
 
@@ -17,5 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `dev.yml` and `publish.yml` workflows.
 - `bf clean` comes from the Alpine overlay instead of a Debian copy - its default cache directories (the apt lists and
   man pages) are now `bf pkg caches`.
+- BusyBox applets are installed as symlinks instead of hard links, so they cannot be split from `/bin/busybox` when
+  layers are copied or cached.
 
 [6.0.0]: https://github.com/bfren/docker-debian/compare/v5.4.3...v6.0.0
