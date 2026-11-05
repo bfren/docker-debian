@@ -40,21 +40,17 @@ FROM quay.io/bfren-bin/figlet:<%= ${FIGLET_IMAGE} %> AS figlet
 
 FROM quay.io/bfren/alpine AS alpine
 
-WORKDIR /tmp
-RUN \
-    # get the overlay from the Alpine base image
-    echo "Cloning Alpine overlay." && \
-    apk add git && git clone --branch <%= ${ALPINE_BRANCH} %> https://github.com/bfren/docker-alpine.git && \
-    mv docker-alpine/overlay /
+# ADD checks the branch's latest commit on every build, so a cached copy of an older commit is never used
+ADD https://github.com/bfren/docker-alpine.git#<%= ${ALPINE_BRANCH} %> /tmp/docker-alpine
 
 
 #======================================================================================================================
 # STAGE 5: install bfren platform
 #======================================================================================================================
 
-FROM debian:<%= ${DEBIAN_MINOR} %>-slim AS install
+FROM quay.io/bfren-bin/debian:<%= ${DEBIAN_MINOR} %>-slim AS install
 COPY --from=build /log /etc/bf/BUILD
-COPY --from=alpine /overlay /
+COPY --from=alpine /tmp/docker-alpine/overlay /
 COPY --from=busybox / /bin
 COPY --from=nushell / /
 COPY --from=figlet / /
@@ -91,8 +87,8 @@ RUN \
         case " ${IGNORE} " in *" ${A##*/} "*) continue ;; esac ; \
         busybox rm -f /${A} ; \
     done ; \
-    # install busybox
-    busybox --install && \
+    # install busybox applets as symlinks - unlike hard links they cannot be split from /bin/busybox when layers are copied or cached
+    busybox --install -s && \
     # reset /tmp permissions
     chmod 1777 /tmp && \
     # setup Nushell using preinstallation script

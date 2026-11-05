@@ -2,9 +2,9 @@
 
 set -euo pipefail
 
-docker pull bfren/alpine
+docker pull quay.io/bfren/alpine
 
-ALPINE_BRANCH="v3.5.2"
+ALPINE_BRANCH="v4.0.0"
 BUSYBOX_VERSION="1.37.0"
 BUSYBOX_BUILD="261022"
 FIGLET_VERSION="2.2.5"
