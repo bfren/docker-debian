@@ -17,7 +17,7 @@ RUN \
 # STAGE 1: load busybox
 #======================================================================================================================
 
-FROM quay.io/bfren-bin/busybox:1.37.0-261022 AS busybox
+FROM quay.io/bfren-bin/busybox:1.37.0-261105 AS busybox
 
 
 #======================================================================================================================
@@ -41,7 +41,7 @@ FROM quay.io/bfren-bin/figlet:2.2.5-261022 AS figlet
 FROM quay.io/bfren/alpine AS alpine
 
 # ADD checks the branch's latest commit on every build, so a cached copy of an older commit is never used
-ADD https://github.com/bfren/docker-alpine.git#v4.0.0 /tmp/docker-alpine
+ADD https://github.com/bfren/docker-alpine.git#v4.0.1 /tmp/docker-alpine
 
 
 #======================================================================================================================
