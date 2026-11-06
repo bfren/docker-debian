@@ -4,7 +4,7 @@ set -euo pipefail
 
 docker pull quay.io/bfren/alpine
 
-ALPINE_BRANCH="v4.0.1"
+ALPINE_BRANCH="v4.0.2"
 BUSYBOX_VERSION="1.37.0"
 BUSYBOX_BUILD="261106.3"
 FIGLET_VERSION="2.2.5"
