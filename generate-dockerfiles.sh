@@ -4,13 +4,13 @@ set -euo pipefail
 
 docker pull quay.io/bfren/alpine
 
-ALPINE_BRANCH="v4.0.0"
+ALPINE_BRANCH="v4.0.1"
 BUSYBOX_VERSION="1.37.0"
-BUSYBOX_BUILD="261022"
+BUSYBOX_BUILD="261106.3"
 FIGLET_VERSION="2.2.5"
-FIGLET_BUILD="261022"
+FIGLET_BUILD="261106.3"
 NU_VERSION="0.116.1"
-NU_BUILD="261014"
+NU_BUILD="261106.3"
 DEBIAN_VERSIONS="12 13"
 
 for V in ${DEBIAN_VERSIONS} ; do
@@ -45,5 +45,4 @@ for V in ${DEBIAN_VERSIONS} ; do
 
 done
 
-docker system prune -f
 echo "Done."

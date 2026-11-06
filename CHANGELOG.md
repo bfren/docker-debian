@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.0.1] - 2026-11-06
+
+### Changed
+
+- BusyBox, figlet and Nushell are rebuilt (build `261106.3`) on Alpine 3.24.4. Their versions are unchanged
+  (BusyBox 1.37.0, figlet 2.2.5, Nushell 0.116.1), and so are BusyBox's applets and Alpine patches.
+- The bfren platform overlay is updated to `bfren/alpine` 4.0.1, which makes no changes to the overlay - see the
+  [Alpine changelog](https://github.com/bfren/docker-alpine/blob/main/CHANGELOG.md).
+
 ## [6.0.0] - 2026-11-05
 
 ### Changed
@@ -20,4 +29,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BusyBox applets are installed as symlinks instead of hard links, so they cannot be split from `/bin/busybox` when
   layers are copied or cached.
 
+[6.0.1]: https://github.com/bfren/docker-debian/compare/v6.0.0...v6.0.1
 [6.0.0]: https://github.com/bfren/docker-debian/compare/v5.4.3...v6.0.0
