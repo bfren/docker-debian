@@ -10,7 +10,7 @@ RUN \
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
     echo "Debian: 13.7" >> /log && \
     echo "Busybox: 1.37.0" >> /log && \
-    echo "Nushell: 0.116.1" >> /log
+    echo "Nushell: 0.117.0" >> /log
 
 
 #======================================================================================================================
@@ -24,7 +24,7 @@ FROM quay.io/bfren-bin/busybox:1.37.0-261106.3 AS busybox
 # STAGE 2: load nushell
 #======================================================================================================================
 
-FROM quay.io/bfren-bin/nushell:0.116.1-trixie-261106.3 AS nushell
+FROM quay.io/bfren-bin/nushell:0.117.0-trixie-261110.2 AS nushell
 
 
 #======================================================================================================================
@@ -41,7 +41,7 @@ FROM quay.io/bfren-bin/figlet:2.2.5-261106.3 AS figlet
 FROM quay.io/bfren/alpine AS alpine
 
 # ADD checks the branch's latest commit on every build, so a cached copy of an older commit is never used
-ADD https://github.com/bfren/docker-alpine.git#v4.0.1 /tmp/docker-alpine
+ADD https://github.com/bfren/docker-alpine.git#v4.0.2 /tmp/docker-alpine
 
 
 #======================================================================================================================
@@ -74,7 +74,7 @@ ENV \
     #   1: yes
     BF_UPGRADE_PACKAGES=1 \
     # Nushell version string to check against installed verion after installation
-    NU_VERSION=0.116.1
+    NU_VERSION=0.117.0
 
 RUN \
     # delete all binaries that will be replaced by busybox - those in ${IGNORE} keep their Debian (GNU) versions, e.g.:
