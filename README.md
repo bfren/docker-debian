@@ -93,6 +93,8 @@ Images are published to Docker Hub (`bfren/debian`) and Quay.io (`quay.io/bfren/
 | `NAME`, `NAME-MAJOR` …        | `trixie`, `trixie-6.0` | As above, using the Debian release name               |
 | `latest`, `6`, `6.0`, `6.0.3` |                        | As above, on the newest Debian version                |
 
+A new `MAJOR` version means a breaking change. Before moving to one, read the [changelog](CHANGELOG.md), where each breaking change is marked **Breaking**.
+
 | Debian        | Security support ends | Community LTS ends |
 | ------------- | --------------------- | ------------------ |
 | 13 (trixie)   | 2028-08-09            | 2030-06-30         |
