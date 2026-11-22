@@ -155,7 +155,7 @@ In this image the timezone is set when the image is built. Call `bf tz Europe/Pa
 
 ### The container exits straight away
 
-The image has no default command. Give it one, e.g. `docker run --rm -it bfren/debian nu`.
+The image has no default command. Give it one, e.g. `docker run --rm -it quay.io/bfren/debian nu`.
 
 ## FAQs
 
