@@ -21,6 +21,8 @@ Use it as the `FROM` line for images that run a single command or tool. For imag
 
 ## Quickstart
 
+1. Create a folder for your image with this layout - everything in `overlay` is copied into the image:
+
 ```plain
 my-image/
 ├── Dockerfile
@@ -29,7 +31,7 @@ my-image/
         └── install
 ```
 
-`Dockerfile`:
+2. Write the `Dockerfile`:
 
 ```dockerfile
 FROM quay.io/bfren/debian:debian13-6.0
@@ -41,7 +43,7 @@ COPY ./overlay /
 RUN bf-install
 ```
 
-`overlay/tmp/install` - your installation script, run by `bf-install`:
+3. Write your installation script, `overlay/tmp/install`. `bf-install` runs it during the build, then deletes it:
 
 ```nu
 #!/usr/bin/nu
@@ -55,10 +57,11 @@ def main [] {
 }
 ```
 
-Build it and open a shell:
+4. Build the image and open a shell in it:
 
 ```sh
-docker build -t my-image . && docker run --rm -it my-image nu
+docker build -t my-image .
+docker run --rm -it my-image nu
 ```
 
 Inside the container, `bf image` shows the image name and version.
@@ -84,11 +87,11 @@ Images are published to Docker Hub (`bfren/debian`) and Quay.io (`quay.io/bfren/
 | `debianX`                     | `debian13`             | You want the latest image for a Debian version        |
 | `debianX-MAJOR`               | `debian13-6`           | You want updates, but not breaking changes            |
 | `debianX-MINOR`               | `debian13-6.0`         | You want fixes only - **recommended for building on** |
-| `debianX-VERSION`             | `debian13-6.0.2`       | You want to pin this image exactly                    |
+| `debianX-VERSION`             | `debian13-6.0.3`       | You want to pin this image exactly                    |
 | `debianX.Y`                   | `debian13.7`           | You want an exact Debian point release                |
-| `debianX.Y-VERSION`           | `debian13.7-6.0.2`     | You want to pin both                                  |
+| `debianX.Y-VERSION`           | `debian13.7-6.0.3`     | You want to pin both                                  |
 | `NAME`, `NAME-MAJOR` …        | `trixie`, `trixie-6.0` | As above, using the Debian release name               |
-| `latest`, `6`, `6.0`, `6.0.2` |                        | As above, on the newest Debian version                |
+| `latest`, `6`, `6.0`, `6.0.3` |                        | As above, on the newest Debian version                |
 
 | Debian        | Security support ends | Community LTS ends |
 | ------------- | --------------------- | ------------------ |
