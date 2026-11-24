@@ -8,7 +8,7 @@ ARG TARGETPLATFORM
 RUN \
     # save platform and version information to log
     echo "Platform: ${TARGETPLATFORM}" >> /log && \
-    echo "Debian: 13.7" >> /log && \
+    echo "Debian: 13.8" >> /log && \
     echo "Busybox: 1.37.0" >> /log && \
     echo "Nushell: 0.117.0" >> /log
 
@@ -48,7 +48,7 @@ ADD https://github.com/bfren/docker-alpine.git#v4.0.2 /tmp/docker-alpine
 # STAGE 5: install bfren platform
 #======================================================================================================================
 
-FROM quay.io/bfren-bin/debian:13.7-slim AS install
+FROM quay.io/bfren-bin/debian:13.8-slim AS install
 COPY --from=build /log /etc/bf/BUILD
 COPY --from=alpine /tmp/docker-alpine/overlay /
 COPY --from=busybox / /bin
