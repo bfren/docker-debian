@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.0.3] - 2026-11-25
+
+### Changed
+
+- Debian 13 is updated to 13.8, so the `debian13` and `trixie` tags move to it and it is published as `debian13.8`.
+  Debian 12 stays on 12.15.
+- BusyBox, figlet and Nushell are rebuilt (build `261125`) on Alpine 3.24.4. Their versions are unchanged -
+  [BusyBox 1.37.0](https://github.com/bfren/busybox/releases/tag/v261125),
+  [figlet 2.2.5](https://github.com/bfren/figlet/releases/tag/v261125) and
+  [Nushell 0.117.0](https://github.com/bfren/nushell/releases/tag/v261125).
+
+### Fixed
+
+- README: the Quickstart is now numbered steps, and says that `bf-install` deletes the installation script after running
+  it.
+- README: the `docker run` example now uses the Quay.io image, like the rest of the examples.
+
 ## [6.0.2] - 2026-11-10
 
 ### Changed
@@ -39,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BusyBox applets are installed as symlinks instead of hard links, so they cannot be split from `/bin/busybox` when
   layers are copied or cached.
 
+[6.0.3]: https://github.com/bfren/docker-debian/compare/v6.0.2...v6.0.3
 [6.0.2]: https://github.com/bfren/docker-debian/compare/v6.0.1...v6.0.2
 [6.0.1]: https://github.com/bfren/docker-debian/compare/v6.0.0...v6.0.1
 [6.0.0]: https://github.com/bfren/docker-debian/compare/v5.4.3...v6.0.0
